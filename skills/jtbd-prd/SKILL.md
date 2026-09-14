@@ -60,6 +60,10 @@ Utiliser cette structure :
 
 [2 phrases maximum, dérivées de la situation et de la friction du JTBD.]
 
+## Personas
+
+[Un persona par type d'utilisateur identifié à l'étape 1 (souvent un seul). Pour chaque persona : un nom court de rôle (pas un prénom fictif), son contexte/situation par rapport au produit — repris du JTBD — et le cas d'usage principal qui le concerne. 2 à 3 phrases par persona, pas une fiche persona marketing. Si plusieurs types de comptes ont des permissions ou des vues différentes (question 2 de l'étape 2), c'est ici qu'il faut le trancher explicitement — pas laisser la section Écrans le découvrir implicitement.]
+
 ## Objectif
 
 [1 phrase. À quoi ressemble "c'est fait" du point de vue de l'utilisateur, dérivé de la motivation du JTBD.]
@@ -119,3 +123,4 @@ Une proposition, pas une version finale — suffisante pour démarrer la constru
 - **Périmètre explicite.** La section Hors périmètre évite la dérive de scope — toujours la remplir.
 - **Le flux est un parcours, pas une liste.** Si la section Flux entre écrans peut se lire comme une liste à puces sans perdre de sens, elle ne remplit pas son rôle — elle doit décrire un mouvement entre écrans, pas seulement les énumérer.
 - **Le schéma correspond au périmètre.** Ne pas ajouter de tables ou de colonnes pour des fonctionnalités qui sont en Hors périmètre.
+- **Personas dérivés du JTBD, jamais inventés.** Reprendre le rôle/contexte déjà établi à l'étape 1 — ne pas ajouter d'âge, de prénom fictif ou de trait qui n'a pas été demandé et n'explique rien du besoin.
