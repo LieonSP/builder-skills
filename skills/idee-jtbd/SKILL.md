@@ -23,7 +23,7 @@ La description donnée est presque toujours **une solution**, pas un job — l'a
 - **Motivation réelle** — au-delà de la fonctionnalité décrite, qu'est-ce que la personne essaie vraiment d'accomplir ?
 - **Alternative actuelle** — que fait-elle aujourd'hui à la place (rien, un carnet, une autre app, une galère manuelle) ?
 
-Si ces trois éléments manquent presque totalement (description d'une ligne, juste un nom de feature), poser au maximum 2 questions ciblées avant de continuer — jamais plus, l'exercice doit rester rapide. Sinon, inférer directement à partir des indices présents, même implicites.
+Sauf si la description rend déjà ces trois éléments limpides, poser 2 à 3 questions ciblées avant de continuer — jamais plus, l'exercice doit rester rapide. Ne questionner que ce qui manque réellement parmi situation, motivation et alternative actuelle ; ne pas redemander ce qui est déjà donné, même implicitement. Attendre les réponses avant de passer à l'étape 2. Si les trois éléments sont déjà clairs, ne poser aucune question et inférer directement.
 
 ## Étape 2 — Formuler le JTBD
 
