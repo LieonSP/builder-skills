@@ -11,39 +11,33 @@ skills/
     references/...
 ```
 
-## Pour les apprenants — importer une skill
+## Pour les apprenants — importer les skills dans votre repo de travail
 
-Les skills sont publiées progressivement pendant la formation. Pour en récupérer une :
+Les skills sont publiées progressivement pendant la formation. Pour les utiliser, vous les copiez dans le dossier `.claude/skills/` **de votre repo de travail** (celui sur lequel vous travaillez pendant la formation) — Claude Code les détecte alors automatiquement dans ce repo.
 
-1. Cloner (une seule fois) ou mettre à jour le repo :
+Dans tous les cas, exécutez les commandes depuis la racine de votre repo de travail.
 
-```bash
-git clone https://github.com/LieonSP/builder-skills.git ~/builder-skills
-```
-
-Si vous l'avez déjà cloné, récupérez simplement les dernières skills publiées :
+### 1. Importer toutes les skills
 
 ```bash
-cd ~/builder-skills && git pull
-```
-
-2. Copier le dossier de la skill voulue dans votre installation Claude Code :
-
-- **Au niveau d'un projet** (recommandé pendant la formation, la skill n'est active que dans ce projet) :
-
-```bash
+git clone https://github.com/LieonSP/builder-skills.git /tmp/builder-skills
 mkdir -p .claude/skills
-cp -r ~/builder-skills/skills/<nom-de-la-skill> .claude/skills/
+cp -r /tmp/builder-skills/skills/* .claude/skills/
+rm -rf /tmp/builder-skills
 ```
 
-- **Au niveau personnel** (disponible dans tous vos projets) :
+Relancez cette commande à chaque nouvelle skill annoncée pendant la formation pour récupérer les dernières versions (les skills déjà présentes seront simplement écrasées par leur dernière version).
+
+### 2. Importer une skill en particulier
+
+Remplacez `<nom-de-la-skill>` par le nom du dossier de la skill voulue (voir la liste ci-dessous) :
 
 ```bash
-mkdir -p ~/.claude/skills
-cp -r ~/builder-skills/skills/<nom-de-la-skill> ~/.claude/skills/
+git clone https://github.com/LieonSP/builder-skills.git /tmp/builder-skills
+mkdir -p .claude/skills
+cp -r /tmp/builder-skills/skills/<nom-de-la-skill> .claude/skills/
+rm -rf /tmp/builder-skills
 ```
-
-Une fois copiée, la skill est automatiquement détectée par Claude Code.
 
 ## Skills disponibles
 
