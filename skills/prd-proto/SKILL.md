@@ -41,6 +41,7 @@ Pose un ensemble **court** de questions avant d'écrire du code — suffisant po
 - Quelle est la chose la plus importante que l'utilisateur doit remarquer ou faire en premier sur cet écran ?
 - Y a-t-il des données ou du contenu à afficher (propose quelques exemples réalistes si la PRD ne les précise pas — un contenu provisoire suffit, mais demande s'il y a une préférence) ?
 - Y a-t-il une interaction particulièrement importante ici (un bouton, un interrupteur, un formulaire, un filtre) ? Que doit-il se passer quand elle est utilisée ?
+- Si cet écran peut être vide (aucune donnée encore) ou si l'action clé peut échouer, qu'est-ce que l'utilisateur doit voir dans ces cas-là — et que doit-il voir juste après avoir réussi l'action clé (confirmation, changement visible) ?
 
 Ne pose pas de question déjà répondue clairement par la PRD — ne redemande pas ce que tu sais déjà. Attends les réponses avant de continuer.
 
@@ -60,6 +61,7 @@ Une fois les questions répondues :
    Travaille en deux passes : d'abord un mini plan de design (4 à 6 couleurs nommées en hexadécimal, les typographies et leur rôle, un concept de mise en page décrit en une phrase), puis relis ce plan avant de coder — si une partie ressemble à ce que tu produirais par défaut pour n'importe quel écran similaire plutôt qu'à un choix fait pour ce projet précis, corrige-la. Choisis un seul élément fort par écran et garde le reste sobre et discipliné. N'utilise le mouvement/l'animation que rarement et avec intention.
 4. **Garde le code simple et lisible** — c'est destiné à un débutant qui pourra un jour vouloir y jeter un œil, pas à une base de code de production.
 5. **Simule les données** nécessaires à l'écran directement dans le code (une constante, un petit tableau) — ne branche jamais un vrai backend ou une vraie API.
+6. **Construis les états dont l'utilisateur a parlé à l'étape 4** — si l'écran peut être vide ou l'action clé peut échouer, ne construis pas seulement le cas où tout est déjà rempli et réussit. Donne un retour visuel clair juste après l'action clé (confirmation, changement d'état, message d'erreur) — jamais un bouton qui semble ne rien faire.
 
 ## Étape 5bis — Relier les écrans entre eux (navigation cliquable)
 
