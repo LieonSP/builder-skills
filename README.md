@@ -41,7 +41,8 @@ rm -rf /tmp/builder-skills
 
 ## Skills disponibles
 
-_Aucune skill publiée pour le moment._
+- **prd-jtbd** — Crée un Product Requirements Document (PRD) à partir d'un Job-To-Be-Done (JTBD) : questions de clarification, liste d'écrans priorisée, flux de navigation, proposition de schéma de base de données. Sauvegarde le résultat en markdown dans `documents/`.
+- **frontend-screen-builder** — Guide un débutant, à partir d'une PRD, jusqu'à un premier écran frontend fonctionnel visible en local dans le navigateur (frontend uniquement, sans backend ni base de données).
 
 ## Pour le formateur — ajouter une skill
 
