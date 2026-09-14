@@ -1,5 +1,5 @@
 ---
-name: jtbd
+name: idee-jtbd
 description: Aide un apprenant en formation product/vibe coding à transformer la description brute de son idée d'application ou de son problème en un Job-To-Be-Done (JTBD) clair, avec une explication de pourquoi ce JTBD a du sens et de ce qu'il apporte pour préciser sa description produit. Si aucune description n'est fournie, demande d'abord "Quelle est l'application ou le problème que tu souhaites vibe coder ?" avant de continuer.
 ---
 
