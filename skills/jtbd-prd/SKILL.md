@@ -56,53 +56,55 @@ Utiliser cette structure :
 
 ---
 
-## Problème
+## 1. Problème
 
 [2 phrases maximum, dérivées de la situation et de la friction du JTBD.]
 
-## Personas
+## 2. Personas
 
 [Un persona par type d'utilisateur identifié à l'étape 1 (souvent un seul). Pour chaque persona : un nom court de rôle (pas un prénom fictif), son contexte/situation par rapport au produit — repris du JTBD — et le cas d'usage principal qui le concerne. 2 à 3 phrases par persona, pas une fiche persona marketing. Si plusieurs types de comptes ont des permissions ou des vues différentes (question 2 de l'étape 2), c'est ici qu'il faut le trancher explicitement — pas laisser la section Écrans le découvrir implicitement.]
 
-## Objectif
+## 3. Objectif
 
 [1 phrase. À quoi ressemble "c'est fait" du point de vue de l'utilisateur, dérivé de la motivation du JTBD.]
 
-## Solution proposée
+## 4. Solution proposée
 
 [3–6 puces. Ce qu'on construit + les décisions de conception/techniques clés.]
 
-## Récits utilisateurs
+## 5. Récits utilisateurs
 
 - En tant que [utilisateur], je veux [action] afin de [résultat].
 
 [Maximum 5 récits. N'inclure que ceux qui ne sont pas évidents — le JTBD couvre déjà le principal.]
 
-## Écrans
+## 6. Hors périmètre
+
+[Liste à puces des exclusions explicites. Si rien n'a été exclu, écrire "À définir — à clarifier avant le début du développement."]
+
+## 7. Métriques de succès
+
+[2–3 résultats mesurables. Privilégier le quantitatif. Dérivés de la réponse aux critères de succès de l'étape 2 si elle a été donnée.]
+
+## 8. Questions ouvertes
+
+[Puces. Décisions ou inconnues à résoudre avant ou pendant la construction. Si aucune, écrire "Aucune."]
+
+Les trois sections suivantes (9 à 11) forment le détail d'exécution — elles ferment le PRD plutôt que de couper le fil narratif Problème → Personas → Objectif → Solution.
+
+## 9. Écrans
 
 Numéroter chaque écran. Mettre en gras et flaguer **(hero)** les écrans prioritaires identifiés à l'étape 2 (ou déduits si l'utilisateur a sauté cette question) — ce sont ceux à concevoir ou construire en premier si seul un sous-ensemble est réalisé. Regrouper par section/zone si le produit en compte plusieurs. Pour chaque écran, une ligne sur sa fonction — suffisant pour que quelqu'un puisse le concevoir sans redemander à quoi il sert.
 
-## Flux entre écrans
+## 10. Flux entre écrans
 
 Pas une liste — un parcours. Décrire, en quelques courts paragraphes ou une séquence numérotée, comment un utilisateur se déplace réellement entre les écrans ci-dessus : ce qui est cliquable, ce qui ouvre quoi, où les dialogues interrompent le flux, et où l'utilisateur arrive après avoir terminé une action. Couvrir explicitement la structure de navigation (ex. : barre de tabs persistante vs. écran d'accueil en hub vs. assistant linéaire) — ne pas la laisser implicite.
 
 **Avant de finaliser cette section, la vérifier par rapport à la section Écrans ci-dessus pour détecter d'éventuelles contradictions** — par exemple une liste d'écrans qui suggère un switcher à cartes en accueil alors que le flux décrit une barre de tabs persistante. Si le JTBD ou les réponses de l'utilisateur ne permettent pas de trancher, poser la question plutôt que de choisir en silence ; c'est l'écart le plus fréquent à ce stade d'un PRD, et il est peu coûteux à corriger ici, coûteux à corriger une fois un écran construit.
 
-## Schéma de données
+## 11. Schéma de données
 
 Une proposition, pas une version finale — suffisante pour démarrer la construction. Pour chaque entité principale : nom de table, colonnes clés avec leur type, et relations avec les autres entités (un-à-plusieurs, plusieurs-à-plusieurs, etc.). Utiliser un bloc de code par entité (colonnes alignées, une par ligne) plutôt qu'un tableau markdown — les tableaux markdown ne se rendent pas de façon fiable dans tous les outils où ce PRD peut être ouvert (ils peuvent s'afficher en texte brut avec les `|`), alors qu'un bloc de code reste lisible partout. Se limiter au périmètre de ce PRD — ne pas concevoir pour des fonctionnalités futures hypothétiques. Signaler explicitement toute colonne qui encode une limite de permission/propriété (ex. : une colonne `owner` ou `account_id` pour l'isolation multi-compte), car cela a des implications pour chaque écran qui touche cette entité.
-
-## Hors périmètre
-
-[Liste à puces des exclusions explicites. Si rien n'a été exclu, écrire "À définir — à clarifier avant le début du développement."]
-
-## Métriques de succès
-
-[2–3 résultats mesurables. Privilégier le quantitatif. Dérivés de la réponse aux critères de succès de l'étape 2 si elle a été donnée.]
-
-## Questions ouvertes
-
-[Puces. Décisions ou inconnues à résoudre avant ou pendant la construction. Si aucune, écrire "Aucune."]
 
 ---
 
