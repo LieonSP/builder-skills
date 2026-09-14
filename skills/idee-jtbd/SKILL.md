@@ -22,8 +22,9 @@ La description donnée est presque toujours **une solution**, pas un job — l'a
 - **Situation / déclencheur** — à quel moment, dans quel contexte cette app serait utilisée ?
 - **Motivation réelle** — au-delà de la fonctionnalité décrite, qu'est-ce que la personne essaie vraiment d'accomplir ?
 - **Alternative actuelle** — que fait-elle aujourd'hui à la place (rien, un carnet, une autre app, une galère manuelle) ?
+- **Profil utilisateur** — qui vit cette situation, dans son rôle ou son contexte par rapport au problème (ex. "gestionnaire de plusieurs appartements en location courte durée", pas juste "un utilisateur") ? Chercher un rôle/contexte fonctionnel, pas une donnée démographique (âge, genre...) qui n'explique pas le besoin.
 
-Sauf si la description rend déjà ces trois éléments limpides, poser 2 à 3 questions ciblées avant de continuer — jamais plus, l'exercice doit rester rapide. Ne questionner que ce qui manque réellement parmi situation, motivation et alternative actuelle ; ne pas redemander ce qui est déjà donné, même implicitement. Attendre les réponses avant de passer à l'étape 2. Si les trois éléments sont déjà clairs, ne poser aucune question et inférer directement.
+Sauf si la description rend déjà ces quatre éléments limpides, poser 2 à 4 questions ciblées avant de continuer — jamais plus, l'exercice doit rester rapide. Ne questionner que ce qui manque réellement parmi situation, motivation, alternative actuelle et profil utilisateur ; ne pas redemander ce qui est déjà donné, même implicitement. Attendre les réponses avant de passer à l'étape 2. Si les quatre éléments sont déjà clairs, ne poser aucune question et inférer directement.
 
 ## Étape 2 — Formuler le JTBD
 
@@ -33,14 +34,14 @@ Un seul JTBD, sous cette forme :
 
 Règles :
 - Le JTBD doit être **plus large que la solution décrite** — s'il se lit comme un simple résumé de la feature ("je veux une app qui liste mes tâches afin d'avoir une liste de tâches"), ce n'est pas un JTBD, recommencer l'inférence.
-- Une seule situation/motivation principale. Si la description mélange clairement deux publics ou deux besoins différents, proposer 2 JTBD maximum, jamais plus.
+- Une seule situation/motivation principale. Si la description mélange clairement deux profils utilisateur ou deux besoins différents, proposer 2 JTBD maximum, jamais plus.
 - Rester concret — éviter les formulations abstraites du type "afin de mieux m'organiser" sans préciser dans quoi ni pourquoi c'est important maintenant.
 
 ## Étape 3 — Expliquer pourquoi
 
 Toujours après le JTBD, en 3 points courts :
 
-1. **D'où vient ce JTBD** — quel(s) indice(s) précis de la description ont permis de le formuler (citer les mots de l'apprenant si possible).
+1. **D'où vient ce JTBD** — quel(s) indice(s) précis de la description, y compris le profil utilisateur donné, ont permis de le formuler (citer les mots de l'apprenant si possible).
 2. **Pourquoi ça tient** — pourquoi ce JTBD reflète un vrai besoin plutôt qu'une feature qu'on a envie de construire.
 3. **Ce que ça débloque** — en quoi partir de ce JTBD (plutôt que de la solution initiale) aide à préciser la description produit : ça oblige à trancher qui est l'utilisateur, ce qu'il fait aujourd'hui à la place, et ce qu'un "ça marche" concret voudrait dire — les trois angles morts les plus fréquents quand on part direct sur la solution en vibe coding.
 
