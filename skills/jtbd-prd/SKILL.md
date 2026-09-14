@@ -1,5 +1,5 @@
 ---
-name: prd-jtbd
+name: jtbd-prd
 description: Crée un Product Requirements Document (PRD) à partir d'un Job-To-Be-Done (JTBD). Pose des questions de clarification produit avant de rédiger le document, inclut une liste d'écrans priorisée, un flux de navigation entre écrans, et une proposition de schéma de base de données. Sauvegarde le résultat en markdown dans le dossier documents/ du repo. À utiliser quand l'utilisateur fournit un JTBD (ou "en tant que [utilisateur], quand [situation], je veux [motivation], afin de [résultat]") et souhaite un cahier des charges complet prêt à être transmis au design ou au code.
 ---
 
