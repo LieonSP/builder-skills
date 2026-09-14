@@ -47,7 +47,7 @@ Une fois copiée, la skill est automatiquement détectée par Claude Code.
 
 ## Skills disponibles
 
-- **product** — Partenaire de réflexion PM : frameworks (JTBD, RICE, OKRs, roadmap, stratégie, discovery, analyse concurrentielle...), principes opérationnels et modes de session (Reflect, Learn, Apply, Simulate, Record, Build, Review). Déclenchement : taper `pp` en début de message, ou automatiquement sur une requête à caractère produit (PRD, roadmap, discovery, recherche utilisateur, OKRs, priorisation...).
+_Aucune skill publiée pour le moment._
 
 ## Pour le formateur — publier une nouvelle skill
 
