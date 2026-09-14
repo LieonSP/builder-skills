@@ -1,5 +1,5 @@
 ---
-name: frontend-proto
+name: prd-proto
 description: Guide un débutant, à partir d'une PRD, jusqu'à un premier écran frontend qui fonctionne, visible en local dans le navigateur. À utiliser dès que l'utilisateur veut démarrer la construction d'un écran à partir d'une PRD, dit "on construit l'écran [X]", ou veut transformer une spec produit en écran visuel qu'il peut voir tourner. Toujours suivre le déroulé complet dans l'ordre — PRD, puis choix de l'écran, puis référence visuelle, puis questions de clarification — avant d'écrire du code. Frontend uniquement : pas de backend, pas de base de données, pas de logique d'authentification.
 ---
 
