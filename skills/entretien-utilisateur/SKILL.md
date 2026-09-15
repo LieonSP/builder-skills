@@ -41,6 +41,14 @@ Rédiger un script de 4 questions ouvertes, dans cet ordre, adaptées à l'objec
 3. **Comportement passé** — "Qu'est-ce que tu as déjà essayé pour résoudre ça ?" — ce que les gens ont fait compte plus que ce qu'ils disent qu'ils feraient.
 4. **Conséquence** — "Qu'est-ce qui se passe si ce problème n'est jamais résolu ?" — révèle si c'est une vraie frustration ou un irritant supportable.
 
+Pour chacune des 4 questions, ajouter une **relance "pourquoi"** — une seule, pas une cascade façon 5 Whys — à utiliser si la première réponse reste en surface (un fait sans le sens qu'il a pour la personne). Une relance "pourquoi" creuse la raison derrière ce qui vient d'être dit, sans jamais orienter vers une solution :
+- **Contexte** → "Pourquoi ce jour-là précisément, et pas un autre ?" (ce qui rend cet épisode représentatif, pas juste anecdotique)
+- **Friction** → "Pourquoi est-ce que ça t'a gêné à ce point-là, à ce moment précis ?" (le sens de la friction, pas juste sa description)
+- **Comportement passé** → "Pourquoi as-tu choisi cette solution plutôt qu'une autre ?" ou "Pourquoi ça n'a pas suffi ?" (le raisonnement derrière le contournement, et pourquoi il a échoué)
+- **Conséquence** → "Pourquoi est-ce que ça compte pour toi, concrètement ?" (l'enjeu réel derrière la conséquence citée)
+
+Adapter ces relances à l'objectif et au persona validés — elles sont un point de départ, pas des formules figées à recopier telles quelles.
+
 Remplacer les crochets par des formulations concrètes, dérivées de l'objectif et du persona validés — ne jamais laisser une question générique du type "[situation liée au problème]" telle quelle dans le script final.
 
 Sauvegarder sous `documents/script-entretien.md` :
@@ -52,15 +60,19 @@ Sauvegarder sous `documents/script-entretien.md` :
 
 ## 1. Contexte
 [question]
+**Relance "pourquoi" :** [question]
 
 ## 2. Friction
 [question]
+**Relance "pourquoi" :** [question]
 
 ## 3. Comportement passé
 [question]
+**Relance "pourquoi" :** [question]
 
 ## 4. Conséquence
 [question]
+**Relance "pourquoi" :** [question]
 ```
 
 `git add documents/script-entretien.md`, `git commit -m "Script d'entretien — [objectif]"`, puis `git push` sur la branche courante (`git branch --show-current`). Si le push échoue (pas de remote, réseau, authentification requise), le dire clairement et donner le chemin local. Si le push réussit et que `origin` est un remote GitHub (`git remote get-url origin`), construire et donner le lien direct — `https://github.com/<owner>/<repo>/blob/<branche>/documents/script-entretien.md`.
@@ -73,7 +85,7 @@ Une fois le script validé, incarner un utilisateur fictif correspondant au pers
 
 Appliquer, dans la simulation, les bonnes pratiques de modération enseignées :
 - Ne jamais faire dire au persona ce qu'un produit devrait faire — rester sur le vécu, la friction, le comportement passé, la conséquence.
-- Au plus une relance ou une reformulation par question (ex. "Qu'est-ce que tu veux dire par... ?"), pour illustrer une bonne pratique sans transformer la simulation en interrogatoire.
+- Au plus une relance par question — utiliser la relance "pourquoi" prévue dans le script si la première réponse simulée reste en surface, sans transformer la simulation en interrogatoire.
 
 Sauvegarder sous `documents/simulation-entretien.md` :
 
@@ -84,15 +96,19 @@ Sauvegarder sous `documents/simulation-entretien.md` :
 
 **Q1 (Contexte) :** [question]
 **R :** [réponse simulée]
+[**Relance "pourquoi" :** [question] / **R :** [réponse] — uniquement si la première réponse restait en surface]
 
 **Q2 (Friction) :** [question]
 **R :** [réponse simulée]
+[**Relance "pourquoi" :** [question] / **R :** [réponse] — uniquement si la première réponse restait en surface]
 
 **Q3 (Comportement passé) :** [question]
 **R :** [réponse simulée]
+[**Relance "pourquoi" :** [question] / **R :** [réponse] — uniquement si la première réponse restait en surface]
 
 **Q4 (Conséquence) :** [question]
 **R :** [réponse simulée]
+[**Relance "pourquoi" :** [question] / **R :** [réponse] — uniquement si la première réponse restait en surface]
 
 ## Ce que révèle cette simulation
 [2-3 phrases : la frustration semble-t-elle réelle ou supportable, qu'est-ce que ça confirme ou remet en cause par rapport à l'objectif de l'étape 1]
