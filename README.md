@@ -46,6 +46,7 @@ rm -rf /tmp/builder-skills
 ## Skills disponibles
 
 - **idee-jtbd** (`/idee-jtbd`) — Transforme la description brute d'une idée d'application ou d'un problème en un Job-To-Be-Done (JTBD) clair, avec l'explication de pourquoi ce JTBD est le bon point de départ.
+- **entretien-utilisateur** (`/entretien-utilisateur`) — Prépare et simule un entretien utilisateur, étape par étape : objectif de la recherche, persona ciblé, script d'entretien (`documents/script-entretien.md`), puis simulation avec un utilisateur fictif (`documents/simulation-entretien.md`).
 - **jtbd-prd** (`/jtbd-prd`) — Crée un Product Requirements Document (PRD) à partir d'un Job-To-Be-Done (JTBD) : questions de clarification, liste d'écrans priorisée, flux de navigation, proposition de schéma de base de données. Sauvegarde le résultat en markdown dans `documents/`.
 - **prd-proto** (`/prd-proto`) — Guide un débutant, à partir d'une PRD, jusqu'à un premier écran frontend fonctionnel visible en local dans le navigateur (frontend uniquement, sans backend ni base de données).
 - **prd-bdd** (`/prd-bdd`) — Crée dans Supabase la base de données décrite par le schéma de données d'une PRD (tables, RLS, jeu de test), sans jamais connecter le proto frontend existant à cette base.
