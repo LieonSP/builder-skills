@@ -1,6 +1,6 @@
 ---
 name: idee-jtbd
-description: Aide un apprenant en formation product/vibe coding à transformer la description brute de son idée d'application ou de son problème en un Job-To-Be-Done (JTBD) clair et son ou ses persona(s), avec une explication de pourquoi ce JTBD a du sens. Sauvegarde le résultat dans `documents/jtbd-personas.md` du repo, réutilisé ensuite par la skill `jtbd-prd`. Si aucune description n'est fournie, demande d'abord "Quelle est l'application ou le problème que tu souhaites vibe coder ?" avant de continuer.
+description: Aide un apprenant en formation product/vibe coding à transformer la description brute de son idée d'application ou de son problème en un Job-To-Be-Done (JTBD) clair et son ou ses persona(s), avec une explication de pourquoi ce JTBD a du sens. Sauvegarde l'idée initiale, le JTBD et les personas dans `documents/jtbd-personas.md` du repo, réutilisé ensuite par la skill `jtbd-prd`. Si aucune description n'est fournie, demande d'abord "Quelle est l'application ou le problème que tu souhaites vibe coder ?" avant de continuer.
 ---
 
 # JTBD à partir d'une idée d'application
@@ -62,6 +62,10 @@ Toujours après le JTBD, en 3 points courts :
 ```
 # JTBD & Personas
 
+## Idée initiale
+
+[La description brute fournie par l'apprenant à l'Entrée, verbatim — pas reformulée, pas résumée.]
+
 ## JTBD
 
 > **Quand** [situation], **je veux** [motivation], **afin de** [résultat].
@@ -71,7 +75,7 @@ Toujours après le JTBD, en 3 points courts :
 **[Nom de rôle]** — [contexte/situation]. Cas d'usage principal : [...].
 ```
 
-(un JTBD et un persona par profil identifié, dans le même ordre — la skill `jtbd-prd` réutilise directement ce fichier ensuite.)
+(un JTBD et un persona par profil identifié, dans le même ordre — la skill `jtbd-prd` réutilise directement ce fichier ensuite, y compris l'idée initiale pour vérifier qu'elle sert toujours le JTBD une fois élargi.)
 
 4. Si le fichier existe déjà (relance de la skill avec une description reformulée), l'écraser avec la nouvelle version — une seule version à la fois, jamais un historique de tentatives accumulées.
 5. Confirmer le chemin sauvegardé à l'apprenant.
@@ -87,3 +91,4 @@ Terminer par une invitation à relancer la skill avec une description reformulé
 - **La solution n'est jamais le JTBD.** Si la réponse ressemble trop à la description initiale, c'est le signal qu'il faut creuser plus loin la motivation réelle.
 - **Pédagogique, pas jargonneux.** Les apprenants découvrent le concept — expliquer simplement, sans citer de théorie non demandée.
 - **Le fichier reflète la dernière proposition, pas un historique.** Toujours écraser `documents/jtbd-personas.md` à chaque exécution plutôt que d'accumuler des versions.
+- **L'idée initiale reste traçable.** Toujours la sauvegarder verbatim dans le fichier, même si le JTBD final s'en écarte largement — c'est ce qui permet à `jtbd-prd` de vérifier plus tard si elle sert encore le JTBD élargi.

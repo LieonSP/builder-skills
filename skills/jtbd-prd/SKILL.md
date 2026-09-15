@@ -9,7 +9,7 @@ Transformer un Job-To-Be-Done en PRD prêt à construire — incluant les écran
 
 ## Entrée
 
-1. Chercher `documents/jtbd-personas.md` à la racine du repo (`git rev-parse --show-toplevel` puis chercher depuis là). S'il existe, l'utiliser comme source du JTBD **et** des personas — ne pas les redemander ni les redéduire depuis zéro, ils sont déjà tranchés par la skill `idee-jtbd`.
+1. Chercher `documents/jtbd-personas.md` à la racine du repo (`git rev-parse --show-toplevel` puis chercher depuis là). S'il existe, l'utiliser comme source du JTBD **et** des personas — ne pas les redemander ni les redéduire depuis zéro, ils sont déjà tranchés par la skill `idee-jtbd`. Retenir aussi sa section "Idée initiale" si présente — elle sert au garde-fou de l'étape 3 (section Solution proposée).
 2. Sinon, l'utilisateur fournit un JTBD via `$ARGUMENTS`, sous la forme qu'il a à disposition (un énoncé complet "quand... je veux... afin de...", ou une version plus brute). Si rien n'est fourni non plus, demander le JTBD avant de continuer.
 
 ## Étape 1 — Analyser le JTBD
@@ -71,7 +71,7 @@ Utiliser cette structure :
 
 ## 4. Solution proposée
 
-[3–6 puces. Ce qu'on construit + les décisions de conception/techniques clés.]
+[3–6 puces. Ce qu'on construit + les décisions de conception/techniques clés. Si `documents/jtbd-personas.md` contient une "Idée initiale", vérifier une fois — avant d'écrire cette section — qu'elle sert encore bien le JTBD tel qu'il a été élargi (le JTBD est censé être plus large que la solution de départ ; sinon l'exercice n'a fait que l'habiller). Si une alternative plus simple ou plus directe apparaît clairement, la signaler à l'utilisateur en une phrase, sans bloquer ni proposer un menu d'options, puis continuer avec la solution qu'il préfère — l'idée initiale par défaut si rien n'est dit.]
 
 ## 5. Récits utilisateurs
 
@@ -127,3 +127,4 @@ Une proposition, pas une version finale — suffisante pour démarrer la constru
 - **Le flux est un parcours, pas une liste.** Si la section Flux entre écrans peut se lire comme une liste à puces sans perdre de sens, elle ne remplit pas son rôle — elle doit décrire un mouvement entre écrans, pas seulement les énumérer.
 - **Le schéma correspond au périmètre.** Ne pas ajouter de tables ou de colonnes pour des fonctionnalités qui sont en Hors périmètre.
 - **Personas dérivés du JTBD, jamais inventés.** Reprendre le rôle/contexte déjà établi à l'étape 1 — ne pas ajouter d'âge, de prénom fictif ou de trait qui n'a pas été demandé et n'explique rien du besoin.
+- **L'idée initiale est challengée une fois, jamais imposée.** Signaler en une phrase si une alternative sert mieux le JTBD élargi ; ne jamais forcer un changement de direction ni ouvrir un brainstorming — l'apprenant garde la décision.
