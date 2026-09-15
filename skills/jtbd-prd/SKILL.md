@@ -1,6 +1,6 @@
 ---
 name: jtbd-prd
-description: Crée un Product Requirements Document (PRD) à partir d'un Job-To-Be-Done (JTBD). Pose des questions de clarification produit avant de rédiger le document, inclut une liste d'écrans priorisée, un flux de navigation entre écrans, et une proposition de schéma de base de données. Sauvegarde le résultat en markdown dans le dossier documents/ du repo. À utiliser quand l'utilisateur fournit un JTBD (ou "en tant que [utilisateur], quand [situation], je veux [motivation], afin de [résultat]") et souhaite un cahier des charges complet prêt à être transmis au design ou au code.
+description: Crée un Product Requirements Document (PRD) à partir d'un Job-To-Be-Done (JTBD). Cherche d'abord `documents/jtbd-personas.md` (produit par la skill `idee-jtbd`) pour récupérer le JTBD et les personas déjà tranchés ; sinon pose des questions de clarification produit avant de rédiger le document. Inclut une liste d'écrans priorisée, un flux de navigation entre écrans, et une proposition de schéma de base de données. Sauvegarde le résultat en markdown dans le dossier documents/ du repo. À utiliser quand l'utilisateur fournit un JTBD (ou "en tant que [utilisateur], quand [situation], je veux [motivation], afin de [résultat]") et souhaite un cahier des charges complet prêt à être transmis au design ou au code.
 ---
 
 # PRD à partir d'un JTBD
@@ -9,12 +9,13 @@ Transformer un Job-To-Be-Done en PRD prêt à construire — incluant les écran
 
 ## Entrée
 
-L'utilisateur fournit un JTBD via `$ARGUMENTS`, sous la forme qu'il a à disposition (un énoncé complet "quand... je veux... afin de...", ou une version plus brute). Si rien n'est fourni, demander le JTBD avant de continuer.
+1. Chercher `documents/jtbd-personas.md` à la racine du repo (`git rev-parse --show-toplevel` puis chercher depuis là). S'il existe, l'utiliser comme source du JTBD **et** des personas — ne pas les redemander ni les redéduire depuis zéro, ils sont déjà tranchés par la skill `idee-jtbd`.
+2. Sinon, l'utilisateur fournit un JTBD via `$ARGUMENTS`, sous la forme qu'il a à disposition (un énoncé complet "quand... je veux... afin de...", ou une version plus brute). Si rien n'est fourni non plus, demander le JTBD avant de continuer.
 
 ## Étape 1 — Analyser le JTBD
 
 Décomposer le JTBD en :
-- **Utilisateur** — qui effectue cette tâche ? Un seul type d'utilisateur, ou plusieurs avec des besoins différents ?
+- **Utilisateur** — qui effectue cette tâche ? Un seul type d'utilisateur, ou plusieurs avec des besoins différents ? (Déjà répondu si `jtbd-personas.md` a été trouvé — reprendre ses personas tels quels plutôt que redéduire.)
 - **Situation/déclencheur** — quel moment ou quelle condition initie ce besoin ?
 - **Motivation** — qu'est-ce que la personne essaie réellement d'accomplir, au-delà de l'action énoncée ?
 - **Friction actuelle** — que fait-elle aujourd'hui à la place, et qu'est-ce qui ne fonctionne pas ?
@@ -27,7 +28,7 @@ En déduire ce qui manque encore pour rédiger un cahier des charges complet :
 
 ## Étape 2 — Poser des questions de clarification
 
-Ne poser que les questions qu'on ne peut pas déduire avec confiance du JTBD. Maximum 7 questions — plus de marge qu'un PRD classique basé sur un brain dump, car celui-ci doit aussi nourrir un schéma de données et un flux d'écrans, pas seulement un énoncé de problème. Être direct, une phrase par question, numérotées. Couvrir (seulement si réellement flou) :
+Ne poser que les questions qu'on ne peut pas déduire avec confiance du JTBD, ou qui ne sont pas déjà tranchées dans `documents/jtbd-personas.md` s'il a été trouvé (notamment la question 2, sur les types de comptes/personas, souvent déjà répondue par ce fichier). Maximum 7 questions — plus de marge qu'un PRD classique basé sur un brain dump, car celui-ci doit aussi nourrir un schéma de données et un flux d'écrans, pas seulement un énoncé de problème. Être direct, une phrase par question, numérotées. Couvrir (seulement si réellement flou) :
 
 1. Les entités principales et leurs attributs clés (que doit retenir le produit ?)
 2. Le nombre de types de comptes/utilisateurs et en quoi leurs permissions ou vues diffèrent
@@ -62,7 +63,7 @@ Utiliser cette structure :
 
 ## 2. Personas
 
-[Un persona par type d'utilisateur identifié à l'étape 1 (souvent un seul). Pour chaque persona : un nom court de rôle (pas un prénom fictif), son contexte/situation par rapport au produit — repris du JTBD — et le cas d'usage principal qui le concerne. 2 à 3 phrases par persona, pas une fiche persona marketing. Si plusieurs types de comptes ont des permissions ou des vues différentes (question 2 de l'étape 2), c'est ici qu'il faut le trancher explicitement — pas laisser la section Écrans le découvrir implicitement.]
+[Si `documents/jtbd-personas.md` a été trouvé à l'Entrée, reprendre ses personas tels quels (même formulation) plutôt que d'en écrire de nouveaux. Sinon, un persona par type d'utilisateur identifié à l'étape 1 (souvent un seul) : un nom court de rôle (pas un prénom fictif), son contexte/situation par rapport au produit — repris du JTBD — et le cas d'usage principal qui le concerne. 2 à 3 phrases par persona, pas une fiche persona marketing. Si plusieurs types de comptes ont des permissions ou des vues différentes (question 2 de l'étape 2), c'est ici qu'il faut le trancher explicitement — pas laisser la section Écrans le découvrir implicitement.]
 
 ## 3. Objectif
 
