@@ -5,7 +5,7 @@ description: Audite une application vibe-codée par un apprenant sur trois axes 
 
 # Audit produit
 
-Vérifier qu'une application vibe-codée (frontend + Supabase) ne présente pas de faille évidente sur trois axes — sécurité, accessibilité, éco-conception — pas un audit exhaustif, une passe mécanique et concrète sur les erreurs les plus fréquentes chez un débutant.
+Vérifier qu'une application vibe-codée (frontend + Supabase) ne présente pas de faille évidente sur trois axes — sécurité, accessibilité, éco-conception — pas un audit exhaustif, une passe mécanique et concrète sur les erreurs les plus fréquentes.
 
 ## Entrée
 
