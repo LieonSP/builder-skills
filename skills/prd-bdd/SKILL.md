@@ -1,6 +1,6 @@
 ---
 name: prd-bdd
-description: Crée dans Supabase la base de données décrite par le schéma de données d'une PRD (tables, RLS, jeu de test), sans jamais connecter le proto frontend existant à cette base. Cherche la PRD sous `documents/PRD-*.md`, détecte l'existant pour ne créer que ce qui manque, pose des questions si le schéma de la PRD est ambigu, et sauvegarde un résumé du schéma créé dans le même dossier que la PRD. À utiliser quand un apprenant veut passer de la PRD (schéma proposé) à une vraie base de données Supabase fonctionnelle, avant de brancher le frontend.
+description: Crée dans Supabase la base de données décrite par le schéma de données d'une PRD (tables, RLS, jeu de test), sans jamais connecter le proto frontend existant à cette base. Cherche la PRD sous `documents/PRD-*.md`, détecte l'existant pour ne créer que ce qui manque, pose des questions si le schéma de la PRD est ambigu, et sauvegarde un résumé du schéma créé dans le même dossier que la PRD, le commite et le pousse sur GitHub, puis donne le lien direct vers le fichier. À utiliser quand un apprenant veut passer de la PRD (schéma proposé) à une vraie base de données Supabase fonctionnelle, avant de brancher le frontend.
 ---
 
 # BDD Supabase à partir d'une PRD
@@ -61,7 +61,9 @@ Insérer quelques lignes illustratives par table (3 à 5, pas un volume de prod)
 
 ## Étape 6 — Sauvegarder le résumé
 
-Sauvegarder un fichier `documents/schema-[slug].md` (même dossier que la PRD, `[slug]` dérivé du nom de la PRD) listant : tables créées ou modifiées cette exécution, colonnes et types, relations, policy RLS appliquée par table, et nombre de lignes de test insérées. Confirmer le chemin à l'apprenant.
+Sauvegarder un fichier `documents/schema-[slug].md` (même dossier que la PRD, `[slug]` dérivé du nom de la PRD) listant : tables créées ou modifiées cette exécution, colonnes et types, relations, policy RLS appliquée par table, et nombre de lignes de test insérées.
+
+`git add documents/schema-[slug].md`, puis `git commit -m "Schéma BDD — [slug]"`. `git push` sur la branche courante (`git branch --show-current`). Si le push échoue (pas de remote configuré, réseau, authentification requise), le dire clairement à l'apprenant et donner uniquement le chemin local du fichier — ne pas bloquer, ne pas réessayer en boucle. Si le push réussit et que `origin` est un remote GitHub (vérifier avec `git remote get-url origin`), construire le lien direct vers le fichier — `https://github.com/<owner>/<repo>/blob/<branche>/documents/schema-[slug].md` — et le donner en clair, cliquable, à l'apprenant. Sinon, donner uniquement le chemin local.
 
 ## Principes
 
@@ -70,3 +72,4 @@ Sauvegarder un fichier `documents/schema-[slug].md` (même dossier que la PRD, `
 - **Ambiguïté = question, jamais un choix par défaut silencieux.** Surtout pour la RLS et le mono/multi-utilisateur — une mauvaise policy RLS découverte tard coûte beaucoup plus cher qu'une question posée tôt.
 - **Jeu de test illustratif, pas de prod.** Quelques lignes reconnaissables, pas un générateur de volume.
 - **Une trace lisible.** Le résumé de schéma dans `documents/` évite à l'apprenant de devoir interroger Supabase pour savoir ce qui a été créé.
+- **Le résumé est poussé, pas juste écrit.** Commiter et pousser systématiquement, puis donner le lien direct vers le fichier — jamais seulement une sauvegarde locale silencieuse.

@@ -1,6 +1,6 @@
 ---
 name: idee-jtbd
-description: Aide un apprenant en formation product/vibe coding à transformer la description brute de son idée d'application ou de son problème en un Job-To-Be-Done (JTBD) clair et son ou ses persona(s), avec une explication de pourquoi ce JTBD a du sens. Sauvegarde l'idée initiale, le JTBD et les personas dans `documents/jtbd-personas.md` du repo, réutilisé ensuite par la skill `jtbd-prd`. Si aucune description n'est fournie, demande d'abord "Quelle est l'application ou le problème que tu souhaites vibe coder ?" avant de continuer.
+description: Aide un apprenant en formation product/vibe coding à transformer la description brute de son idée d'application ou de son problème en un Job-To-Be-Done (JTBD) clair et son ou ses persona(s), avec une explication de pourquoi ce JTBD a du sens. Sauvegarde l'idée initiale, le JTBD et les personas dans `documents/jtbd-personas.md` du repo, le commite et le pousse sur GitHub, puis donne le lien direct vers le fichier — réutilisé ensuite par la skill `jtbd-prd`. Si aucune description n'est fournie, demande d'abord "Quelle est l'application ou le problème que tu souhaites vibe coder ?" avant de continuer.
 ---
 
 # JTBD à partir d'une idée d'application
@@ -78,7 +78,9 @@ Toujours après le JTBD, en 3 points courts :
 (un JTBD et un persona par profil identifié, dans le même ordre — la skill `jtbd-prd` réutilise directement ce fichier ensuite, y compris l'idée initiale pour vérifier qu'elle sert toujours le JTBD une fois élargi.)
 
 4. Si le fichier existe déjà (relance de la skill avec une description reformulée), l'écraser avec la nouvelle version — une seule version à la fois, jamais un historique de tentatives accumulées.
-5. Confirmer le chemin sauvegardé à l'apprenant.
+5. `git add documents/jtbd-personas.md`, puis `git commit -m "JTBD & personas — [titre court dérivé de l'idée initiale]"`.
+6. `git push` sur la branche courante (`git branch --show-current`). Si le push échoue (pas de remote configuré, réseau, authentification requise), le dire clairement à l'apprenant et donner uniquement le chemin local du fichier — ne pas bloquer, ne pas réessayer en boucle.
+7. Si le push réussit et que `origin` est un remote GitHub (vérifier avec `git remote get-url origin`), construire le lien direct vers le fichier — `https://github.com/<owner>/<repo>/blob/<branche>/documents/jtbd-personas.md` — et le donner en clair, cliquable, à l'apprenant. Sinon, donner uniquement le chemin local.
 
 ## Étape 5 — Ouvrir la suite
 
@@ -92,3 +94,4 @@ Terminer par une invitation à relancer la skill avec une description reformulé
 - **Pédagogique, pas jargonneux.** Les apprenants découvrent le concept — expliquer simplement, sans citer de théorie non demandée.
 - **Le fichier reflète la dernière proposition, pas un historique.** Toujours écraser `documents/jtbd-personas.md` à chaque exécution plutôt que d'accumuler des versions.
 - **L'idée initiale reste traçable.** Toujours la sauvegarder verbatim dans le fichier, même si le JTBD final s'en écarte largement — c'est ce qui permet à `jtbd-prd` de vérifier plus tard si elle sert encore le JTBD élargi.
+- **Le fichier est poussé, pas juste écrit.** Commiter et pousser systématiquement, puis donner le lien direct vers le fichier — jamais seulement une sauvegarde locale silencieuse.

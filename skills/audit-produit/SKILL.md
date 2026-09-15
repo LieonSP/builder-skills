@@ -1,11 +1,11 @@
 ---
 name: audit-produit
-description: Audite une application vibe-codée par un apprenant sur trois axes — sécurité (clés partagées/exposées, RLS Supabase risquées, inspiré de l'OWASP Top 10:2025), accessibilité (contraste, alt text, navigation clavier, labels de formulaire) et éco-conception (coût des requêtes, pagination, requêtes en boucle). Produit un compte rendu par catégorie avec un code couleur (🟢 ok, 🟠 attention, 🔴 risqué) et propose des corrections sans jamais les appliquer automatiquement. À utiliser quand un apprenant veut vérifier que son app est prête avant de la partager ou de la considérer terminée.
+description: Audite une application vibe-codée par un apprenant sur trois axes — sécurité (clés partagées/exposées, RLS Supabase risquées, inspiré de l'OWASP Top 10:2025), accessibilité (contraste, alt text, navigation clavier, labels de formulaire) et éco-conception (coût des requêtes, pagination, requêtes en boucle). Produit un compte rendu par catégorie avec un code couleur (🟢 ok, 🟠 attention, 🔴 risqué), propose des corrections sans jamais les appliquer automatiquement, sauvegarde le rapport dans `documents/audit-[slug].md`, le commite et le pousse sur GitHub, puis donne le lien direct vers le fichier. À utiliser quand un apprenant veut vérifier que son app est prête avant de la partager ou de la considérer terminée.
 ---
 
 # Audit produit
 
-Vérifier qu'une application vibe-codée (frontend + Supabase) ne présente pas de faille évidente sur trois axes — sécurité, accessibilité, éco-conception — pas un audit exhaustif, une passe mécanique et concrète sur les erreurs les plus fréquentes.
+Vérifier qu'une application vibe-codée (frontend + Supabase) ne présente pas de faille évidente sur trois axes — sécurité, accessibilité, éco-conception — pas un audit exhaustif, une passe mécanique et concrète sur les erreurs les plus fréquentes chez un débutant.
 
 ## Entrée
 
@@ -110,6 +110,16 @@ Ne jamais afficher la valeur d'une clé ou d'un secret trouvé dans le rapport �
 
 Ne jamais appliquer une correction automatiquement, même évidente, sur aucun des trois axes. Les proposer seulement ; c'est à l'apprenant de décider et de demander l'application s'il la veut.
 
+## Étape 8 — Sauvegarder, committer et donner le lien
+
+1. Trouver la racine du repo : exécuter `git rev-parse --show-toplevel`.
+   - Si échec (pas un repo git), sauvegarder le rapport sous `./documents/` relatif au répertoire de travail courant et s'arrêter là — pas de commit/push possible hors d'un repo git, le dire à l'apprenant.
+2. Créer le dossier `documents/` s'il n'existe pas déjà.
+3. Sauvegarder le rapport sous `documents/audit-[slug].md`, où `[slug]` est dérivé du nom du repo (basename de la racine trouvée à l'étape 1), en kebab-case. Écraser le fichier s'il existe déjà — chaque exécution reflète l'état actuel de l'app ; l'historique des audits précédents reste consultable via `git log` sur ce fichier, pas besoin de le garder dans le fichier lui-même.
+4. `git add documents/audit-[slug].md`, puis `git commit -m "Audit produit — [date du jour]"`.
+5. `git push` sur la branche courante (`git branch --show-current`). Si le push échoue (pas de remote configuré, réseau, authentification requise), le dire clairement à l'apprenant et donner uniquement le chemin local du fichier — ne pas bloquer, ne pas réessayer en boucle.
+6. Si le push réussit et que `origin` est un remote GitHub (vérifier avec `git remote get-url origin`), construire le lien direct vers le fichier — `https://github.com/<owner>/<repo>/blob/<branche>/documents/audit-[slug].md` — et le donner en clair, cliquable, à l'apprenant à la fin du rapport. Sinon, donner uniquement le chemin local.
+
 ## Principes
 
 - **Concret, pas théorique.** Chaque constat cite le fichier, la ligne, la policy ou la requête exacte — jamais une remarque générique du type "attention aux clés" ou "pense à l'accessibilité".
@@ -117,3 +127,4 @@ Ne jamais appliquer une correction automatiquement, même évidente, sur aucun d
 - **Jamais de secret affiché en clair**, même dans le rapport destiné à l'apprenant.
 - **Proposer, jamais appliquer.** Une correction — de sécurité, d'accessibilité ou de performance — change le comportement de l'app ; ça reste la décision de l'apprenant.
 - **Le pire des statuts fait le statut global**, sur les trois axes confondus, pas une moyenne.
+- **Le rapport est poussé, pas juste affiché.** Sauvegarder, commiter et pousser systématiquement, puis donner le lien direct vers le fichier — jamais seulement le résultat en chat sans trace dans le repo.

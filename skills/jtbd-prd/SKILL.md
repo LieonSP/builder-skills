@@ -1,6 +1,6 @@
 ---
 name: jtbd-prd
-description: Crée un Product Requirements Document (PRD) à partir d'un Job-To-Be-Done (JTBD). Cherche d'abord `documents/jtbd-personas.md` (produit par la skill `idee-jtbd`) pour récupérer le JTBD et les personas déjà tranchés ; sinon pose des questions de clarification produit avant de rédiger le document. Inclut une liste d'écrans priorisée, un flux de navigation entre écrans, et une proposition de schéma de base de données. Sauvegarde le résultat en markdown dans le dossier documents/ du repo. À utiliser quand l'utilisateur fournit un JTBD (ou "en tant que [utilisateur], quand [situation], je veux [motivation], afin de [résultat]") et souhaite un cahier des charges complet prêt à être transmis au design ou au code.
+description: Crée un Product Requirements Document (PRD) à partir d'un Job-To-Be-Done (JTBD). Cherche d'abord `documents/jtbd-personas.md` (produit par la skill `idee-jtbd`) pour récupérer le JTBD et les personas déjà tranchés ; sinon pose des questions de clarification produit avant de rédiger le document. Inclut une liste d'écrans priorisée, un flux de navigation entre écrans, et une proposition de schéma de base de données. Sauvegarde le résultat en markdown dans le dossier documents/ du repo, le commite et le pousse sur GitHub, puis donne le lien direct vers le fichier. À utiliser quand l'utilisateur fournit un JTBD (ou "en tant que [utilisateur], quand [situation], je veux [motivation], afin de [résultat]") et souhaite un cahier des charges complet prêt à être transmis au design ou au code.
 ---
 
 # PRD à partir d'un JTBD
@@ -116,7 +116,9 @@ Une proposition, pas une version finale — suffisante pour démarrer la constru
    - Si échec (pas un repo git), utiliser `./documents/` relatif au répertoire de travail courant, et informer l'utilisateur que la sauvegarde s'est faite hors d'un repo.
 2. Créer le dossier `documents/` s'il n'existe pas déjà.
 3. Sauvegarder le PRD sous `documents/PRD-[slug].md`, où `[slug]` est un nom court en kebab-case dérivé du titre.
-4. Confirmer le chemin sauvegardé à l'utilisateur.
+4. `git add documents/PRD-[slug].md`, puis `git commit -m "PRD — [titre]"`.
+5. `git push` sur la branche courante (`git branch --show-current`). Si le push échoue (pas de remote configuré, réseau, authentification requise), le dire clairement à l'utilisateur et donner uniquement le chemin local du fichier — ne pas bloquer, ne pas réessayer en boucle.
+6. Si le push réussit et que `origin` est un remote GitHub (vérifier avec `git remote get-url origin`), construire le lien direct vers le fichier — `https://github.com/<owner>/<repo>/blob/<branche>/documents/PRD-[slug].md` — et le donner en clair, cliquable, à l'utilisateur. Sinon, donner uniquement le chemin local.
 
 ## Principes
 
@@ -128,3 +130,4 @@ Une proposition, pas une version finale — suffisante pour démarrer la constru
 - **Le schéma correspond au périmètre.** Ne pas ajouter de tables ou de colonnes pour des fonctionnalités qui sont en Hors périmètre.
 - **Personas dérivés du JTBD, jamais inventés.** Reprendre le rôle/contexte déjà établi à l'étape 1 — ne pas ajouter d'âge, de prénom fictif ou de trait qui n'a pas été demandé et n'explique rien du besoin.
 - **L'idée initiale est challengée une fois, jamais imposée.** Signaler en une phrase si une alternative sert mieux le JTBD élargi ; ne jamais forcer un changement de direction ni ouvrir un brainstorming — l'apprenant garde la décision.
+- **Le PRD est poussé, pas juste écrit.** Commiter et pousser systématiquement, puis donner le lien direct vers le fichier — jamais seulement une sauvegarde locale silencieuse.
