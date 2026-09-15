@@ -1,6 +1,6 @@
 ---
 name: prd-proto
-description: Guide un débutant, à partir d'une PRD, jusqu'à un premier écran frontend qui fonctionne, visible en local dans le navigateur. À utiliser dès que l'utilisateur veut démarrer la construction d'un écran à partir d'une PRD, dit "on construit l'écran [X]", ou veut transformer une spec produit en écran visuel qu'il peut voir tourner. Toujours suivre le déroulé complet dans l'ordre — PRD, puis choix de l'écran, puis référence visuelle, puis questions de clarification — avant d'écrire du code. Frontend uniquement : pas de backend, pas de base de données, pas de logique d'authentification.
+description: Guide un débutant, à partir d'une PRD, jusqu'à un premier écran frontend qui fonctionne, visible en local et poussé sur le déploiement Vercel déjà en place depuis le module 1 (aucun nouveau projet, aucun CLI). À utiliser dès que l'utilisateur veut démarrer la construction d'un écran à partir d'une PRD, dit "on construit l'écran [X]", ou veut transformer une spec produit en écran visuel qu'il peut voir tourner. Toujours suivre le déroulé complet dans l'ordre — PRD, puis choix de l'écran, puis référence visuelle, puis questions de clarification — avant d'écrire du code. Frontend uniquement : pas de backend, pas de base de données, pas de logique d'authentification.
 ---
 
 # Constructeur d'écran frontend
@@ -49,7 +49,7 @@ Ne pose pas de question déjà répondue clairement par la PRD — ne redemande 
 
 Une fois les questions répondues :
 
-1. **Vérifier si un projet existe déjà.** S'il s'agit du premier écran, crée un nouveau projet dans un dossier dédié sous **`prototypes/<nom-du-projet>/` à la racine du repo** (toujours cet emplacement — jamais à la racine directement, jamais dans un dossier de domaine comme `Beaver/`, `Eagle/` ou `Turtle/`, jamais dans `apps/` qui est réservé aux mini-apps Supabase déployées en prod) — stack par défaut : Vite + React + Tailwind CSS, sauf si l'utilisateur a déjà une autre stack en cours — n'introduis pas une deuxième stack en cours de route. Si un projet existe déjà depuis un écran précédent, ajoute-toi à celui-ci plutôt que d'en créer un nouveau.
+1. **Travailler à la racine du repo — jamais un nouveau projet, jamais de CLI Vercel ni de configuration supplémentaire.** Le repo a déjà une page web à la racine et un déploiement Vercel connecté depuis le module 1 (auto-déploiement à chaque push) — c'est ce même projet, cette même stack, ce même déploiement qu'on réutilise, jamais un second. Pour le tout premier écran du proto : si du contenu existe déjà à la racine (la page du module 1), le déplacer intact dans `archive/page-s1/` (créer le dossier si besoin) avant de commencer — jamais l'écraser ni le supprimer directement — et le dire clairement à l'apprenant. Construire ensuite le proto à la racine, en gardant la stack déjà en place si elle existe (Vite + React + Tailwind CSS par défaut sinon — n'introduis pas une deuxième stack en cours de route). Si un écran précédent du proto existe déjà, ajoute-toi à celui-ci plutôt que d'en recréer un.
 2. **Ne construire que cet écran** en profondeur — pas d'autres écrans ébauchés en détail à ce stade. En revanche, tout élément de cet écran qui, selon la PRD, doit mener vers un autre écran (bouton, lien, onglet, item de menu) doit être un vrai élément cliquable, prêt à être relié — voir Étape 5bis.
 3. **Concevoir avec intention, pas par défaut.** Base la palette, la typographie et la mise en page sur la référence visuelle et les réponses de l'étape 4 — ne retombe pas sur les patterns génériques qu'on voit partout avec l'IA :
    - fond crème + police serif + accent terracotta ;
@@ -74,13 +74,15 @@ L'objectif final est une maquette cliquable, comme un vrai prototype : chaque é
 - Avant de considérer l'écran terminé, **teste toi-même le parcours** en cliquant dans le navigateur depuis l'écran précédent pour vérifier que la navigation fonctionne réellement.
 - **Le panneau Browser ne rend la page (et n'accepte clics/scroll) que lorsqu'il est affiché à l'écran** — s'il passe en arrière-plan pendant que l'utilisateur regarde autre chose dans l'app, `computer` (clic/scroll) peut timeout avec "Browser pane is currently hidden". Si ça arrive, ne repasse pas en boucle sur `computer` : vérifie plutôt l'interaction directement dans le DOM via `javascript_tool` (ex. `document.querySelector('button[aria-label="..."]').click()` puis un court `await new Promise(r => setTimeout(r, 50))` avant de lire `document.body.innerText` ou un attribut d'état) — ça fonctionne même pane caché. Ne jamais utiliser `requestAnimationFrame` dans ce genre de script de vérification : il se met en pause lui aussi quand la page n'est pas visible, ce qui fait planter le script pour de bon (timeout ~45s) plutôt que de simplement échouer proprement.
 
-## Étape 6 — Lancer et montrer le résultat
+## Étape 6 — Lancer, pousser et montrer le résultat
 
-Lance le serveur de développement (`npm run dev` ou équivalent selon la stack choisie) depuis le dossier du projet, et donne à l'utilisateur l'adresse localhost à ouvrir dans son navigateur. Vérifie que le serveur tourne bien (regarde la sortie de la commande) avant de dire que c'est prêt — ne suppose pas simplement que la commande a réussi.
+Lance le serveur de développement (`npm run dev` ou équivalent selon la stack choisie) depuis la racine du repo, et donne à l'utilisateur l'adresse localhost à ouvrir dans son navigateur. Vérifie que le serveur tourne bien (regarde la sortie de la commande) avant de dire que c'est prêt — ne suppose pas simplement que la commande a réussi.
 
 Si la commande échoue (dépendance manquante, port déjà utilisé, mauvais dossier), corrige-la toi-même en premier lieu ; ne fais remonter une erreur à l'utilisateur que si tu es bloqué après deux ou trois tentatives, et explique-la en langage simple (pas une trace d'erreur brute).
 
 **Une fois l'écran fini et vérifié, donne toujours explicitement le lien localhost dans ta réponse** (ex. `http://localhost:5183`) — pas juste "le serveur tourne" ou "tu peux aller voir". C'est ce lien que l'utilisateur va cliquer pour voir concrètement ce qui a été construit ; ne le fais jamais deviner ou remonter chercher dans l'historique. Répète-le à chaque écran terminé (voir aussi "Après le premier écran" ci-dessous), même si le port n'a pas changé depuis le dernier écran.
+
+Ensuite, `git add`, `git commit -m "Proto — écran [nom]"`, puis `git push` sur la branche courante. Ce push met à jour automatiquement l'URL Vercel déjà configurée depuis le module 1 — aucune nouvelle configuration, aucun CLI à installer. Le dire explicitement à l'apprenant : son lien Vercel habituel affichera ce nouvel écran d'ici une minute ou deux.
 
 ---
 
@@ -92,4 +94,8 @@ Une fois ce nouvel écran construit, n'oublie pas de :
 1. Créer sa route dans le routing existant.
 2. Repasser sur les écrans précédents pour rebrancher tout lien/bouton qui pointait vers cet écran en "non actif" (Étape 5bis) — il doit maintenant mener réellement vers ce nouvel écran.
 3. Vérifier en cliquant que le parcours complet fonctionne dans les deux sens si la PRD le prévoit (aller-retour entre écrans).
-4. Redonner explicitement le lien localhost à l'utilisateur (Étape 6) — le serveur tourne peut-être déjà, mais le lien doit quand même réapparaître clairement dans ta réponse, pas seulement au tout premier écran.
+4. Committer et pousser (le push met à jour l'URL Vercel existante automatiquement), puis redonner explicitement le lien localhost à l'utilisateur (Étape 6) — le serveur tourne peut-être déjà, mais le lien doit quand même réapparaître clairement dans ta réponse, pas seulement au tout premier écran.
+
+## Note pour la suite
+
+Plus tard, quand le vrai produit remplacera ce proto (module "vibe coder par itération"), le même geste s'appliquera : sauvegarder le proto dans `archive/` avant de construire l'écran réel par-dessus. Ce n'est pas le rôle de cette skill de le faire — seulement de laisser le repo dans un état où cette transition reste simple : racine propre, historique git conservé, rien d'autre à démonter.
