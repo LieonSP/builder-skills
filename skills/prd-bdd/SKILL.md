@@ -13,10 +13,12 @@ Transformer la section "Schéma de données" d'une PRD en une vraie base Supabas
    - Si un seul fichier trouvé, l'utiliser.
    - Si plusieurs, demander lequel traiter.
    - Si aucun, demander le chemin de la PRD.
-2. Vérifier que les credentials Supabase sont disponibles dans un fichier `.env` à la racine du repo : `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `SUPABASE_ACCESS_TOKEN`.
-   - Si le fichier ou une des trois variables manque, arrêter ici et dire précisément à l'apprenant quoi ajouter (nom de variable, où les trouver dans son dashboard Supabase : Project Settings → API pour l'URL et la service key, Account → Access Tokens pour l'access token). Ne jamais demander à ce que les valeurs soient tapées dans le chat.
+2. Vérifier que les credentials Supabase sont disponibles dans un fichier `.env` à la racine du repo : `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `SUPABASE_ACCESS_TOKEN`.
+   - Si le fichier ou une de ces trois variables manque, arrêter ici et dire précisément à l'apprenant quoi ajouter (nom de variable, où les trouver dans son dashboard Supabase : Project Settings → API Keys pour l'URL et la secret key, Account → Access Tokens pour créer un Personal Access Token). Ne jamais demander à ce que les valeurs soient tapées dans le chat.
+   - Le même `.env` contient aussi `SUPABASE_PUBLISHABLE_KEY`, utilisée par d'autres skills (le proto frontend) — pas requise par `prd-bdd`, ne pas la redemander.
    - Vérifier que `.env` est bien listé dans `.gitignore` ; s'il ne l'est pas, s'arrêter et le signaler à l'apprenant sans le corriger soi-même.
 3. Extraire le project ref depuis `SUPABASE_URL` (`https://<ref>.supabase.co`) — nécessaire pour l'API Management (DDL).
+4. Toutes les requêtes Supabase de cette skill passent par `curl` (API REST et API Management) — jamais par le CLI Supabase (`supabase db push`, `supabase link`, etc.), même pour la création de tables ou de policies.
 
 ## Étape 1 — Lire le schéma de la PRD
 
@@ -57,7 +59,7 @@ Activer RLS sur chaque table (`ALTER TABLE ... ENABLE ROW LEVEL SECURITY`), puis
 
 ## Étape 5 — Jeu de test
 
-Insérer quelques lignes illustratives par table (3 à 5, pas un volume de prod), via l'API REST avec la service key (`$SUPABASE_URL/rest/v1/<table>`, bypass RLS). Respecter l'ordre des dépendances (tables référencées avant celles qui les référencent via une clé étrangère). Utiliser des données plausibles pour le domaine de la PRD, pas des `test1`/`test2` — l'apprenant doit reconnaître son produit en regardant les données.
+Insérer quelques lignes illustratives par table (3 à 5, pas un volume de prod), via l'API REST en curl avec la secret key (`curl $SUPABASE_URL/rest/v1/<table>`, headers `apikey` et `Authorization: Bearer` = `$SUPABASE_SECRET_KEY`, bypass RLS). Respecter l'ordre des dépendances (tables référencées avant celles qui les référencent via une clé étrangère). Utiliser des données plausibles pour le domaine de la PRD, pas des `test1`/`test2` — l'apprenant doit reconnaître son produit en regardant les données.
 
 ## Étape 6 — Sauvegarder le résumé
 
@@ -73,3 +75,4 @@ Sauvegarder un fichier `documents/schema-[slug].md` (même dossier que la PRD, `
 - **Jeu de test illustratif, pas de prod.** Quelques lignes reconnaissables, pas un générateur de volume.
 - **Une trace lisible.** Le résumé de schéma dans `documents/` évite à l'apprenant de devoir interroger Supabase pour savoir ce qui a été créé.
 - **Le résumé est poussé, pas juste écrit.** Commiter et pousser systématiquement, puis donner le lien direct vers le fichier — jamais seulement une sauvegarde locale silencieuse.
+- **Toujours curl, jamais le CLI Supabase.** Aucune commande `supabase ...` (link, db push, etc.) — l'API REST (`SUPABASE_SECRET_KEY`) pour les données, l'API Management (`SUPABASE_ACCESS_TOKEN`) pour le DDL, toutes deux en curl.
