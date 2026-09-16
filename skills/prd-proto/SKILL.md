@@ -1,6 +1,6 @@
 ---
 name: prd-proto
-description: Guide un débutant, à partir d'une PRD, jusqu'à un premier écran frontend qui fonctionne, visible en local et poussé sur le déploiement Vercel déjà en place depuis le module 1 (aucun nouveau projet, aucun CLI). À utiliser dès que l'utilisateur veut démarrer la construction d'un écran à partir d'une PRD, dit "on construit l'écran [X]", ou veut transformer une spec produit en écran visuel qu'il peut voir tourner. Toujours suivre le déroulé complet dans l'ordre — PRD, puis choix de l'écran, puis référence visuelle, puis questions de clarification — avant d'écrire du code. Frontend uniquement : pas de backend, pas de base de données, pas de logique d'authentification.
+description: Guide un débutant, à partir d'une PRD (cherchée automatiquement sous `documents/PRD-*.md` si aucune n'est fournie), jusqu'à un premier écran frontend qui fonctionne, visible en local et poussé sur le déploiement Vercel déjà en place depuis le module 1 (aucun nouveau projet, aucun CLI). À utiliser dès que l'utilisateur veut démarrer la construction d'un écran à partir d'une PRD, dit "on construit l'écran [X]", ou veut transformer une spec produit en écran visuel qu'il peut voir tourner. Toujours suivre le déroulé complet dans l'ordre — PRD, puis choix de l'écran, puis référence visuelle, puis questions de clarification — avant d'écrire du code. Frontend uniquement : pas de backend, pas de base de données, pas de logique d'authentification.
 ---
 
 # Constructeur d'écran frontend
@@ -15,7 +15,11 @@ Suis les étapes ci-dessous **dans l'ordre**. Ne saute pas d'étape, et ne comme
 
 ## Étape 1 — Récupérer la PRD
 
-Demande à l'utilisateur de coller le texte de sa PRD ou de t'indiquer le fichier. Si aucun des deux n'est disponible, demande-lui de décrire le produit et ses principaux écrans en quelques phrases — ne bloque pas en attendant une PRD formelle.
+1. Si un argument a été fourni (texte de PRD ou chemin de fichier), l'utiliser directement.
+2. Sinon, chercher `documents/PRD-*.md` à la racine du repo (`git rev-parse --show-toplevel` puis chercher depuis là).
+   - Si un seul fichier trouvé, l'utiliser.
+   - Si plusieurs, demander lequel traiter.
+3. Si rien n'a été trouvé aux deux étapes précédentes, demander à l'utilisateur de coller le texte de sa PRD ou de t'indiquer le fichier. Si aucun des deux n'est disponible, demande-lui de décrire le produit et ses principaux écrans en quelques phrases — ne bloque pas en attendant une PRD formelle.
 
 ## Étape 2 — Choisir l'écran
 
