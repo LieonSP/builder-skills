@@ -28,7 +28,7 @@ Si les credentials Supabase sont absents ou inaccessibles, auditer uniquement ce
 
 ### Étape 2 — Inspecter la base Supabase (si les credentials sont disponibles)
 
-Via l'API Management (`POST https://api.supabase.com/v1/projects/<ref>/database/query`), interroger `pg_tables` et `pg_policies` du schéma `public` :
+En curl vers l'API Management (`curl -X POST https://api.supabase.com/v1/projects/<ref>/database/query -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -d '{"query": "<requête SQL>"}'`), interroger `pg_tables` et `pg_policies` du schéma `public` :
 
 - Tables sans RLS activée du tout → accès non isolé, à traiter comme risque direct.
 - Tables avec RLS activée mais policy `USING (true)` ou `WITH CHECK (true)` alors que la table a une colonne `owner`/`account_id` (ou équivalent) → l'isolation est prévue dans le schéma mais pas appliquée.

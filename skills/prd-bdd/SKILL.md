@@ -32,7 +32,14 @@ Ne pas deviner si un point est réellement ambigu — poser la question plutôt 
 
 ## Étape 2 — Inspecter l'existant
 
-Avant de créer quoi que ce soit, interroger `information_schema.tables` et `information_schema.columns` (schéma `public`) via l'API Management (`POST https://api.supabase.com/v1/projects/<ref>/database/query`, `Authorization: Bearer $SUPABASE_ACCESS_TOKEN`) pour savoir ce qui existe déjà.
+Avant de créer quoi que ce soit, interroger `information_schema.tables` et `information_schema.columns` (schéma `public`) pour savoir ce qui existe déjà, en curl vers l'API Management :
+
+```bash
+curl -X POST "https://api.supabase.com/v1/projects/<ref>/database/query" \
+  -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "select table_name, column_name, data_type from information_schema.columns where table_schema = '"'"'public'"'"';"}'
+```
 
 Comparer à la PRD :
 - Table absente → à créer (Étape 3)
@@ -42,7 +49,7 @@ Comparer à la PRD :
 
 ## Étape 3 — Créer/adapter les tables
 
-Pour chaque table manquante, générer et exécuter le DDL via l'API Management :
+Pour chaque table manquante, générer le DDL et l'exécuter en curl vers la même API Management que l'Étape 2 (`curl -X POST .../database/query -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -d '{"query": "<le DDL>"}'`) :
 - Nom de table en snake_case ASCII (pas d'accent, pas de majuscule), dérivé du nom d'entité de la PRD
 - Clé primaire `id uuid primary key default gen_random_uuid()` sauf si la PRD impose une autre clé
 - Types Postgres standards mappés depuis la PRD (text, int/bigint, numeric, boolean, timestamptz, jsonb, uuid, text[]...)
@@ -51,7 +58,7 @@ Pour chaque table manquante, générer et exécuter le DDL via l'API Management 
 
 ## Étape 4 — RLS
 
-Activer RLS sur chaque table (`ALTER TABLE ... ENABLE ROW LEVEL SECURITY`), puis appliquer une policy selon ce que dit la PRD :
+Activer RLS sur chaque table (`ALTER TABLE ... ENABLE ROW LEVEL SECURITY`), puis appliquer une policy selon ce que dit la PRD — même mécanisme que l'Étape 3, en curl vers l'API Management :
 
 - **Table sans colonne d'isolation** (mono-utilisateur pour cette entité) → policy ouverte (select/insert/update/delete autorisés), comme une app perso sans compte.
 - **Table avec une colonne de type `owner`/`account_id` signalée dans la PRD** (multi-utilisateur) → policy scopée sur cette colonne (ex. `auth.uid() = owner_id`), même si l'auth réelle n'est pas encore branchée côté frontend — la policy doit déjà être correcte pour le jour où elle le sera.
