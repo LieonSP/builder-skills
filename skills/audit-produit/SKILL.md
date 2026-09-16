@@ -10,9 +10,9 @@ Vérifier qu'une application vibe-codée (frontend + Supabase) ne présente pas 
 ## Entrée
 
 Auditer le repo courant :
-- Le code frontend (dossier `prototypes/<projet>/` ou équivalent trouvé dans le repo).
+- Le code frontend, à la racine du repo (même emplacement que `prd-proto` — plus de sous-dossier dédié).
 - Tout fichier `.env` présent — jamais son contenu affiché en clair dans le rapport, seulement son existence et sa présence ou non dans `.gitignore`.
-- Les credentials Supabase (`$SUPABASE_URL`, `$SUPABASE_SERVICE_KEY`, `$SUPABASE_ACCESS_TOKEN`), pour interroger les RLS réellement actives en base plutôt que deviner depuis les migrations locales — même approche que la skill `prd-bdd`.
+- Les credentials Supabase (`$SUPABASE_URL`, `$SUPABASE_SECRET_KEY`, `$SUPABASE_ACCESS_TOKEN`), pour interroger les RLS réellement actives en base plutôt que deviner depuis les migrations locales — même approche que la skill `prd-bdd`.
 
 Si les credentials Supabase sont absents ou inaccessibles, auditer uniquement ce qui est visible dans le code et le dire explicitement dans le rapport final (limite de portée assumée, pas une omission silencieuse).
 
@@ -20,8 +20,9 @@ Si les credentials Supabase sont absents ou inaccessibles, auditer uniquement ce
 
 ### Étape 1 — Inspecter le code frontend
 
-- Chercher toute clé secrète en dur : `service_role`, une chaîne JWT longue (`eyJ...`) qui n'est pas la clé anon publique connue du projet, une clé d'API tierce codée en constante.
-- Vérifier qu'aucun appel du frontend n'utilise `SUPABASE_SERVICE_KEY` (elle contourne RLS — elle ne doit jamais atteindre le navigateur), seulement la clé anon publique.
+- Chercher toute clé secrète en dur : `SUPABASE_SECRET_KEY`/`service_role`, un Personal Access Token Supabase (`SUPABASE_ACCESS_TOKEN`, souvent préfixé `sbp_`), une chaîne JWT longue (`eyJ...`) qui n'est pas la clé publishable connue du projet, une clé d'API tierce codée en constante.
+- Vérifier qu'aucun appel du frontend n'utilise `SUPABASE_SECRET_KEY` (elle contourne RLS — elle ne doit jamais atteindre le navigateur), seulement la clé publishable.
+- Un `SUPABASE_ACCESS_TOKEN` exposé est encore plus grave qu'une `SUPABASE_SECRET_KEY` exposée : le Personal Access Token donne accès à **tous** les projets Supabase du compte, pas seulement celui-ci — le traiter en 🔴 même si le reste du projet semble sain.
 - Vérifier que `.env` (ou tout fichier de secrets équivalent) est listé dans `.gitignore`.
 - Repérer les cas où une donnée sensible est seulement cachée par une condition d'affichage côté UI (ex. un bouton ou une section masqués en CSS/JS selon le rôle) sans qu'une policy RLS empêche réellement la lecture des données sous-jacentes.
 
@@ -38,7 +39,7 @@ Via l'API Management (`POST https://api.supabase.com/v1/projects/<ref>/database/
 Utiliser le Top 10 comme grille de lecture, pas comme liste à cocher intégralement — certaines catégories n'ont pas de sens pour un prototype de formation et doivent être marquées **non applicable** plutôt que forcées à un statut :
 
 - **A01 Broken Access Control** → résultat de l'Étape 2 (RLS).
-- **A02 Security Misconfiguration** → clés partagées, `.env` non ignoré, résultat de l'Étape 1.
+- **A02 Security Misconfiguration** → clés partagées, `.env` non ignoré, résultat de l'Étape 1 — un `SUPABASE_ACCESS_TOKEN` exposé (accès à tout le compte) prime en gravité sur une `SUPABASE_SECRET_KEY` exposée (accès à ce seul projet).
 - **A03 Software Supply Chain Failures** → dépendances ajoutées depuis une source non officielle, lockfile absent du repo. Vérification légère seulement.
 - **A04 Cryptographic Failures** → secret ou mot de passe stocké en clair dans le code ou dans une table.
 - **A05 Injection** → recherche de construction de requête SQL par concaténation de chaîne dans une Edge Function/RPC, si le projet en a. Non applicable si le projet n'a que des appels PostgREST standards (déjà paramétrés).
@@ -74,7 +75,7 @@ Appliquer la même règle sur les trois axes :
 
 - 🟢 **Ok** — rien trouvé qui corresponde au risque de cette catégorie.
 - 🟠 **Attention** — mauvaise pratique repérée, pas immédiatement bloquante ou exploitable telle quelle (ex. RLS activée mais policy plus permissive que nécessaire sur une table peu sensible ; images non optimisées mais peu nombreuses).
-- 🔴 **Risqué** — exploitable ou bloquant directement (clé secrète exposée, table sans RLS contenant des données d'autres utilisateurs, formulaire totalement inutilisable au clavier, fetch complet sur une table déjà volumineuse).
+- 🔴 **Risqué** — exploitable ou bloquant directement (clé secrète ou Personal Access Token exposé, table sans RLS contenant des données d'autres utilisateurs, formulaire totalement inutilisable au clavier, fetch complet sur une table déjà volumineuse).
 - **Non applicable** — catégorie hors périmètre pour ce projet ; ne pas forcer un statut coloré.
 
 Le statut global du rapport est **le pire des statuts individuels obtenus, tous axes confondus**, jamais une moyenne ni un vote majoritaire — un seul 🔴 rend le rapport global 🔴.
