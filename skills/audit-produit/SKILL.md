@@ -28,18 +28,21 @@ Si les credentials Supabase sont absents ou inaccessibles, auditer uniquement ce
 
 ### Étape 2 — Inspecter la base Supabase (si les credentials sont disponibles)
 
-En curl vers l'API Management (`curl -X POST https://api.supabase.com/v1/projects/<ref>/database/query -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -d '{"query": "<requête SQL>"}'`), interroger `pg_tables` et `pg_policies` du schéma `public` :
+En curl vers l'API Management (`curl -X POST https://api.supabase.com/v1/projects/<ref>/database/query -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -d '{"query": "<requête SQL>"}'`), interroger `pg_tables`, `pg_policies` et les privilèges de table du schéma `public` :
 
 - Tables sans RLS activée du tout → accès non isolé, à traiter comme risque direct.
 - Tables avec RLS activée mais policy `USING (true)` ou `WITH CHECK (true)` alors que la table a une colonne `owner`/`account_id` (ou équivalent) → l'isolation est prévue dans le schéma mais pas appliquée.
-- Tables avec RLS activée et aucune policy → bloque tout accès, y compris légitime ; à signaler comme dysfonctionnement plutôt que faille de sécurité.
+- Tables avec RLS activée et **aucune policy du tout** (ni lecture ni écriture) → bloque tout accès, y compris légitime ; à signaler comme dysfonctionnement plutôt que faille de sécurité.
+- Tables avec RLS activée et une policy `SELECT` mais aucune policy insert/update/delete pour `anon`/`authenticated` → ne pas confondre avec le cas précédent : c'est le motif attendu pour une table de données de référence en lecture seule (voir `prd-bdd`, Étape 4), à traiter en 🟢, pas en dysfonctionnement.
+- Table sans `GRANT` sur `anon`, `authenticated` ou `service_role` (`information_schema.role_table_grants`) → inaccessible même avec la secret key, indépendamment de RLS ; c'est un mode de panne différent d'une RLS mal configurée, à signaler distinctement.
+- Fonction `SECURITY DEFINER` sans `search_path` fixé (`SET search_path = ''`) → catégorie "Function Search Path Mutable" du Security Advisor Supabase, vulnérable à un détournement de privilège — 🔴, même si le reste de la base est sain.
 
 ### Étape 3 — Passer les catégories OWASP Top 10:2025 applicables
 
 Utiliser le Top 10 comme grille de lecture, pas comme liste à cocher intégralement — certaines catégories n'ont pas de sens pour un prototype de formation et doivent être marquées **non applicable** plutôt que forcées à un statut :
 
 - **A01 Broken Access Control** → résultat de l'Étape 2 (RLS).
-- **A02 Security Misconfiguration** → clés partagées, `.env` non ignoré, résultat de l'Étape 1 — un `SUPABASE_ACCESS_TOKEN` exposé (accès à tout le compte) prime en gravité sur une `SUPABASE_SECRET_KEY` exposée (accès à ce seul projet).
+- **A02 Security Misconfiguration** → clés partagées, `.env` non ignoré, résultat de l'Étape 1 — un `SUPABASE_ACCESS_TOKEN` exposé (accès à tout le compte) prime en gravité sur une `SUPABASE_SECRET_KEY` exposée (accès à ce seul projet). Inclut aussi un `GRANT` manquant et une fonction `SECURITY DEFINER` sans `search_path` fixé, repérés à l'Étape 2.
 - **A03 Software Supply Chain Failures** → dépendances ajoutées depuis une source non officielle, lockfile absent du repo. Vérification légère seulement.
 - **A04 Cryptographic Failures** → secret ou mot de passe stocké en clair dans le code ou dans une table.
 - **A05 Injection** → recherche de construction de requête SQL par concaténation de chaîne dans une Edge Function/RPC, si le projet en a. Non applicable si le projet n'a que des appels PostgREST standards (déjà paramétrés).
