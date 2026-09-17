@@ -1,6 +1,6 @@
 ---
 name: prd-bdd
-description: Crée dans Supabase la base de données décrite par le schéma de données d'une PRD (tables, RLS, jeu de test), sans jamais connecter le proto frontend existant à cette base. Cherche la PRD sous `documents/PRD-*.md`, détecte l'existant pour ne créer que ce qui manque, pose des questions si le schéma de la PRD est ambigu, et sauvegarde un résumé du schéma créé dans le même dossier que la PRD, le commite et le pousse sur GitHub, puis donne le lien direct vers le fichier. À utiliser quand un apprenant veut passer de la PRD (schéma proposé) à une vraie base de données Supabase fonctionnelle, avant de brancher le frontend.
+description: Crée dans Supabase la base de données décrite par le schéma de données d'une PRD (tables, types énumérés, triggers d'auto-provisioning, RLS à 3 niveaux, jeu de test), sans jamais connecter le proto frontend existant à cette base. Cherche la PRD sous `documents/PRD.md` ou `documents/PRD-*.md`, détecte l'existant pour ne créer que ce qui manque, pose des questions si le schéma de la PRD est ambigu, et sauvegarde un résumé du schéma créé dans le même dossier que la PRD, le commite et le pousse sur GitHub, puis donne le lien direct vers le fichier. À utiliser quand un apprenant veut passer de la PRD (schéma proposé) à une vraie base de données Supabase fonctionnelle, avant de brancher le frontend.
 ---
 
 # BDD Supabase à partir d'une PRD
@@ -9,7 +9,7 @@ Transformer la section "Schéma de données" d'une PRD en une vraie base Supabas
 
 ## Entrée
 
-1. Chercher `documents/PRD-*.md` à la racine du repo (`git rev-parse --show-toplevel` puis chercher depuis là).
+1. Chercher `documents/PRD.md` ou `documents/PRD-*.md` à la racine du repo (`git rev-parse --show-toplevel` puis chercher depuis là).
    - Si un seul fichier trouvé, l'utiliser.
    - Si plusieurs, demander lequel traiter.
    - Si aucun, demander le chemin de la PRD.
@@ -55,6 +55,10 @@ Pour chaque table manquante, générer le DDL et l'exécuter en curl vers la mê
 - Types Postgres standards mappés depuis la PRD (text, int/bigint, numeric, boolean, timestamptz, jsonb, uuid, text[]...)
 - `created_at timestamptz default now()` par défaut si la PRD ne dit rien sur le suivi temporel
 - Clés étrangères pour chaque relation décrite, avec `on delete` explicite (demander si la PRD ne le précise pas et que la conséquence n'est pas évidente)
+- Si la PRD décrit une colonne à liste fermée de valeurs déjà énumérées (ex. "vocabulaire / concept / bonne pratique / mantra"), créer un vrai type Postgres (`CREATE TYPE <nom> AS ENUM (...)`) et l'utiliser comme type de colonne — pas un `text` libre ni un check constraint improvisé
+- Si la PRD demande qu'une ligne soit créée automatiquement suite à un événement sur `auth.users` (typiquement un profil créé à l'inscription), créer une fonction `SECURITY DEFINER` et un trigger `AFTER INSERT ON auth.users` qui l'appelle — cette exigence ne sera jamais satisfaite autrement, cette skill ne touchant jamais au frontend
+
+Juste après la création d'une table, lui accorder explicitement les privilèges de base : `GRANT SELECT, INSERT, UPDATE, DELETE ON <table> TO anon, authenticated, service_role;`. **Indispensable** : contrairement à une table créée depuis l'éditeur Supabase, une table créée par SQL brut via l'API Management n'accorde ces privilèges à personne d'autre qu'au propriétaire de la table — même la secret key (`service_role`) se verrait refuser l'accès sans ce `GRANT`, RLS ou pas. À faire pour chaque table, avant l'Étape 4 et avant l'Étape 5.
 
 ## Étape 4 — RLS
 
@@ -62,11 +66,16 @@ Activer RLS sur chaque table (`ALTER TABLE ... ENABLE ROW LEVEL SECURITY`), puis
 
 - **Table sans colonne d'isolation** (mono-utilisateur pour cette entité) → policy ouverte (select/insert/update/delete autorisés), comme une app perso sans compte.
 - **Table avec une colonne de type `owner`/`account_id` signalée dans la PRD** (multi-utilisateur) → policy scopée sur cette colonne (ex. `auth.uid() = owner_id`), même si l'auth réelle n'est pas encore branchée côté frontend — la policy doit déjà être correcte pour le jour où elle le sera.
-- Si la PRD ne permet pas de trancher entre les deux, c'est une des questions de l'Étape 1 — ne pas choisir par défaut.
+- **Table sans colonne d'isolation mais signalée par la PRD comme lecture seule / non modifiable par l'utilisateur** (données de référence communes, ex. un fonds commun partagé) → policy `SELECT` ouverte pour les utilisateurs connectés, mais **aucune** policy insert/update/delete pour leur rôle ; ces écritures ne se font que via la secret key (hors RLS). Ne pas la confondre avec la première catégorie : une table réellement ouverte autorise aussi l'écriture, celle-ci non.
+- Si la PRD ne permet pas de trancher entre ces trois cas, c'est une des questions de l'Étape 1 — ne pas choisir par défaut.
 
 ## Étape 5 — Jeu de test
 
-Insérer quelques lignes illustratives par table (3 à 5, pas un volume de prod), via l'API REST en curl avec la secret key (`curl $SUPABASE_URL/rest/v1/<table>`, headers `apikey` et `Authorization: Bearer` = `$SUPABASE_SECRET_KEY`, bypass RLS). Respecter l'ordre des dépendances (tables référencées avant celles qui les référencent via une clé étrangère). Utiliser des données plausibles pour le domaine de la PRD, pas des `test1`/`test2` — l'apprenant doit reconnaître son produit en regardant les données.
+Si au moins une table référence `auth.users` par clé étrangère, créer d'abord un utilisateur de test via l'API Admin Auth (`POST $SUPABASE_URL/auth/v1/admin/users` avec la secret key) et réutiliser son `id` pour toutes les lignes dépendantes — sans ça, ces insertions échoueraient sur la contrainte de clé étrangère. `auth.users` est la table où Supabase gère les comptes de l'application (e-mail, mot de passe, session) ; si ça se mentionne à l'apprenant, dire simplement qu'un compte factice a été ajouté pour donner un propriétaire réaliste aux données d'exemple — ce n'est pas une vraie personne, rien d'anormal à le voir apparaître dans le projet.
+
+Lors de l'insertion groupée par l'API REST, tous les objets d'un même envoi doivent avoir exactement les mêmes clés (limite de PostgREST) — insérer ligne par ligne les tables dont les lignes n'ont pas toutes les mêmes champs renseignés.
+
+Insérer quelques lignes illustratives par table (3 à 5, pas un volume de prod), via l'API REST en curl avec la secret key (`curl $SUPABASE_URL/rest/v1/<table>`, headers `apikey` et `Authorization: Bearer` = `$SUPABASE_SECRET_KEY`, bypass RLS). Respecter l'ordre des dépendances (utilisateur de test et tables référencées avant celles qui les référencent via une clé étrangère). Utiliser des données plausibles pour le domaine de la PRD, pas des `test1`/`test2` — l'apprenant doit reconnaître son produit en regardant les données.
 
 ## Étape 6 — Sauvegarder le résumé
 
@@ -83,3 +92,4 @@ Sauvegarder un fichier `documents/schema-[slug].md` (même dossier que la PRD, `
 - **Une trace lisible.** Le résumé de schéma dans `documents/` évite à l'apprenant de devoir interroger Supabase pour savoir ce qui a été créé.
 - **Le résumé est poussé, pas juste écrit.** Commiter et pousser systématiquement, puis donner le lien direct vers le fichier — jamais seulement une sauvegarde locale silencieuse.
 - **Toujours curl, jamais le CLI Supabase.** Aucune commande `supabase ...` (link, db push, etc.) — l'API REST (`SUPABASE_SECRET_KEY`) pour les données, l'API Management (`SUPABASE_ACCESS_TOKEN`) pour le DDL, toutes deux en curl.
+- **Compte-rendu en langage clair, jamais dans le vocabulaire d'implémentation.** Les termes techniques de ce document (trigger, fonction, provisioning, policy, RLS, grant, enum...) servent à exécuter le travail, pas à le raconter à l'apprenant. Dire ce que ça fait pour lui, pas comment c'est construit : pas "j'ai ajouté un trigger d'auto-provisioning sur auth.users" mais "dès qu'un compte est créé, son profil se crée automatiquement avec". Objectif : qu'il comprenne le résultat sans jamais se sentir perdu ni paniquer devant un mot qu'il ne connaît pas.
