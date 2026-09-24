@@ -51,6 +51,7 @@ rm -rf /tmp/builder-skills
 - **prd-proto** (`/prd-proto`) — Guide un débutant, à partir d'une PRD, jusqu'à un premier écran frontend fonctionnel visible en local dans le navigateur (frontend uniquement, sans backend ni base de données).
 - **connecter-supabase** (`/connecter-supabase`) — Connecte le repo à un projet Supabase à partir du seul project ref : récupère les clés et écrit `.env`, sans jamais demander de mot de passe de base de données. À lancer avant `prd-bdd`.
 - **prd-bdd** (`/prd-bdd`) — Crée dans Supabase la base de données décrite par le schéma de données d'une PRD (tables, RLS, jeu de test), sans jamais connecter le proto frontend existant à cette base.
+- **design-mvp** (`/design-mvp`) — Branche un design Claude Design (canvas d'écrans) sur les vraies tables Supabase créées par `prd-bdd`, écran par écran, sans jamais recourir à des données mockées.
 - **audit-produit** (`/audit-produit`) — Audite une app vibe-codée sur trois axes (sécurité inspirée de l'OWASP Top 10:2025, accessibilité, éco-conception) et produit un compte rendu coloré (🟢/🟠/🔴) par catégorie, avec des corrections proposées mais jamais appliquées automatiquement.
 
 ## Pour le formateur — ajouter une skill
