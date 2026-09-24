@@ -12,8 +12,9 @@ Faire passer un écran d'un design Claude Design (canvas d'artboards) à un écr
 ## Entrée
 
 1. Confirmer que `.env` contient les 4 variables Supabase (`SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `SUPABASE_ACCESS_TOKEN`). Si l'une manque, s'arrêter et renvoyer l'apprenant vers `connecter-supabase` — cette skill ne connecte jamais Supabase elle-même.
-2. Lire `documents/schema-[slug].md` (à côté de la PRD) pour connaître les tables, colonnes et policies RLS déjà en place. Si ce fichier n'existe pas, renvoyer vers `prd-bdd` — sans schéma connu, impossible de savoir quels appels écrire.
-3. Demander à l'apprenant le **lien de partage de son design** (`https://claude.ai/artifact/...`) — le même lien qu'il obtient depuis "Partager" sur son design, peu importe la vue depuis laquelle il l'a généré. Rien d'autre à demander : pas de fichier à exporter, pas de dossier à indiquer — le design se lit directement depuis ce lien avec l'outil Artifact.
+2. Lire la PRD (`documents/PRD.md` ou `documents/PRD-[slug].md`, même repérage que `jtbd-prd`/`prd-bdd`) pour disposer du contexte produit — notamment les écrans prévus et leurs versions minimales, nécessaires à l'Étape 5 quand une action clé pointe vers un écran absent du canvas. Si elle est absente, continuer quand même (le schéma suffit pour le câblage de base) mais le signaler dans le compte-rendu final (Étape 7) : les décisions de l'Étape 5 se prendront alors sans ce filet.
+3. Lire `documents/schema-[slug].md` (à côté de la PRD) pour connaître les tables, colonnes et policies RLS déjà en place. Si ce fichier n'existe pas, renvoyer vers `prd-bdd` — sans schéma connu, impossible de savoir quels appels écrire.
+4. Demander à l'apprenant le **lien de partage de son design** (`https://claude.ai/artifact/...`) — le même lien qu'il obtient depuis "Partager" sur son design, peu importe la vue depuis laquelle il l'a généré. Rien d'autre à demander : pas de fichier à exporter, pas de dossier à indiquer — le design se lit directement depuis ce lien avec l'outil Artifact.
 
 ## Étape 1 — Lire le design depuis son lien
 
