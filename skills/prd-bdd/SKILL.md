@@ -75,7 +75,7 @@ Si au moins une table référence `auth.users` par clé étrangère, créer d'ab
 
 Lors de l'insertion groupée par l'API REST, tous les objets d'un même envoi doivent avoir exactement les mêmes clés (limite de PostgREST) — insérer ligne par ligne les tables dont les lignes n'ont pas toutes les mêmes champs renseignés.
 
-Insérer quelques lignes illustratives par table (3 à 5, pas un volume de prod), via l'API REST en curl avec la secret key (`curl $SUPABASE_URL/rest/v1/<table>`, headers `apikey` et `Authorization: Bearer` = `$SUPABASE_SECRET_KEY`, bypass RLS). Respecter l'ordre des dépendances (utilisateur de test et tables référencées avant celles qui les référencent via une clé étrangère). Utiliser des données plausibles pour le domaine de la PRD, pas des `test1`/`test2` — l'apprenant doit reconnaître son produit en regardant les données.
+Insérer quelques lignes illustratives par table (3 à 5, pas un volume de prod), via l'API REST en curl avec la secret key (`curl $SUPABASE_URL/rest/v1/<table>`, header `apikey` = `$SUPABASE_SECRET_KEY`, bypass RLS — pas de header `Authorization: Bearer` avec cette clé, réservé aux vrais jetons d'utilisateur). Respecter l'ordre des dépendances (utilisateur de test et tables référencées avant celles qui les référencent via une clé étrangère). Utiliser des données plausibles pour le domaine de la PRD, pas des `test1`/`test2` — l'apprenant doit reconnaître son produit en regardant les données.
 
 ## Étape 6 — Sauvegarder le résumé
 
