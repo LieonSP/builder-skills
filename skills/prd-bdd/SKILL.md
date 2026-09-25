@@ -1,11 +1,11 @@
 ---
 name: prd-bdd
-description: Crée dans Supabase la base de données décrite par le schéma de données d'une PRD (tables, types énumérés, triggers d'auto-provisioning, RLS à 3 niveaux, jeu de test), sans jamais connecter le proto frontend existant à cette base. Cherche la PRD sous `documents/PRD.md` ou `documents/PRD-*.md`, détecte l'existant pour ne créer que ce qui manque, pose des questions si le schéma de la PRD est ambigu, et sauvegarde un résumé du schéma créé dans le même dossier que la PRD, le commite et le pousse sur GitHub, puis donne le lien direct vers le fichier. À utiliser quand un apprenant veut passer de la PRD (schéma proposé) à une vraie base de données Supabase fonctionnelle, avant de brancher le frontend.
+description: Crée dans Supabase la base de données décrite par le schéma de données d'une PRD (tables, types énumérés, triggers d'auto-provisioning, RLS à 3 niveaux, jeu de test), sans jamais connecter le frontend existant à cette base. Cherche la PRD sous `documents/PRD.md` ou `documents/PRD-*.md`, détecte l'existant pour ne créer que ce qui manque, pose des questions si le schéma de la PRD est ambigu, et sauvegarde un résumé du schéma créé dans le même dossier que la PRD, le commite et le pousse sur GitHub, puis donne le lien direct vers le fichier. À utiliser quand un apprenant veut passer de la PRD (schéma proposé) à une vraie base de données Supabase fonctionnelle, avant de brancher le frontend.
 ---
 
 # BDD Supabase à partir d'une PRD
 
-Transformer la section "Schéma de données" d'une PRD en une vraie base Supabase : tables, RLS, jeu de test illustratif. Le proto frontend du repo n'est jamais touché — cette skill s'arrête à la base de données.
+Transformer la section "Schéma de données" d'une PRD en une vraie base Supabase : tables, RLS, jeu de test illustratif. Le frontend du repo n'est jamais touché — cette skill s'arrête à la base de données.
 
 ## Entrée
 
@@ -15,7 +15,7 @@ Transformer la section "Schéma de données" d'une PRD en une vraie base Supabas
    - Si aucun, demander le chemin de la PRD.
 2. Vérifier que les credentials Supabase sont disponibles dans un fichier `.env` à la racine du repo : `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `SUPABASE_ACCESS_TOKEN`.
    - Si le fichier ou une de ces trois variables manque, arrêter ici et dire précisément à l'apprenant quoi ajouter (nom de variable, où les trouver dans son dashboard Supabase : Project Settings → API Keys pour l'URL et la secret key, Account → Access Tokens pour créer un Personal Access Token). Ne jamais demander à ce que les valeurs soient tapées dans le chat.
-   - Le même `.env` contient aussi `SUPABASE_PUBLISHABLE_KEY`, utilisée par d'autres skills (le proto frontend) — pas requise par `prd-bdd`, ne pas la redemander.
+   - Le même `.env` contient aussi `SUPABASE_PUBLISHABLE_KEY`, utilisée par d'autres skills (le frontend, via `design-mvp`) — pas requise par `prd-bdd`, ne pas la redemander.
    - Vérifier que `.env` est bien listé dans `.gitignore` ; s'il ne l'est pas, s'arrêter et le signaler à l'apprenant sans le corriger soi-même.
 3. Extraire le project ref depuis `SUPABASE_URL` (`https://<ref>.supabase.co`) — nécessaire pour l'API Management (DDL).
 4. Toutes les requêtes Supabase de cette skill passent par `curl` (API REST et API Management) — jamais par le CLI Supabase (`supabase db push`, `supabase link`, etc.), même pour la création de tables ou de policies.
@@ -83,8 +83,8 @@ Ce compte doit être **réellement utilisable pour se connecter** — c'est avec
      -H "Content-Type: application/json" \
      -d '{"email": "demo@<slug>.test", "password": "<mot de passe>", "email_confirm": true}'
    ```
-3. Écrire `TEST_USER_EMAIL` et `TEST_USER_PASSWORD` dans `.env` — jamais dans `documents/schema-[slug].md` ni dans aucun autre fichier committé.
-4. **Idempotence** : si un compte de démo existe déjà (projet créé avec une version antérieure de cette skill) mais que `.env` n'a pas `TEST_USER_PASSWORD`, ne pas le recréer — lui fixer un mot de passe via `PUT $SUPABASE_URL/auth/v1/admin/users/<id>` (même corps, sans l'e-mail si inchangé) et compléter `.env`.
+3. Écrire `DEMO_USER_EMAIL` et `DEMO_USER_PASSWORD` dans `.env` — jamais dans `documents/schema-[slug].md` ni dans aucun autre fichier committé.
+4. **Idempotence** : si un compte de démo existe déjà (projet créé avec une version antérieure de cette skill) mais que `.env` n'a pas `DEMO_USER_PASSWORD`, ne pas le recréer — lui fixer un mot de passe via `PUT $SUPABASE_URL/auth/v1/admin/users/<id>` (même corps, sans l'e-mail si inchangé) et compléter `.env`.
 
 À dire à l'apprenant en une phrase simple : un compte de démo a été créé pour donner un propriétaire réaliste aux données d'exemple — ce n'est pas une vraie personne ; ses identifiants sont rangés dans `.env`, et ils lui seront rappelés à la fin de `design-mvp` pour qu'il puisse s'y connecter et voir ses données d'exemple.
 
@@ -100,7 +100,7 @@ Sauvegarder un fichier `documents/schema-[slug].md` (même dossier que la PRD, `
 
 ## Principes
 
-- **Jamais de frontend.** Cette skill ne touche, n'édite, ni ne référence aucun fichier du proto frontend — même pas pour y ajouter un client Supabase. Si on lui demande d'aller plus loin, elle s'arrête et le dit.
+- **Jamais de frontend.** Cette skill ne touche, n'édite, ni ne référence aucun fichier du frontend — même pas pour y ajouter un client Supabase. Si on lui demande d'aller plus loin, elle s'arrête et le dit.
 - **Additif, jamais destructeur.** On ajoute ce qui manque ; on ne supprime et on ne modifie jamais une table, une colonne ou des données existantes sans que ce soit une décision explicite de l'apprenant.
 - **Ambiguïté = question, jamais un choix par défaut silencieux.** Surtout pour la RLS et le mono/multi-utilisateur — une mauvaise policy RLS découverte tard coûte beaucoup plus cher qu'une question posée tôt.
 - **Jeu de test illustratif, pas de prod.** Quelques lignes reconnaissables, pas un générateur de volume.
