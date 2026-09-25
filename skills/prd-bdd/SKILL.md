@@ -71,7 +71,22 @@ Activer RLS sur chaque table (`ALTER TABLE ... ENABLE ROW LEVEL SECURITY`), puis
 
 ## Étape 5 — Jeu de test
 
-Si au moins une table référence `auth.users` par clé étrangère, créer d'abord un utilisateur de test via l'API Admin Auth (`POST $SUPABASE_URL/auth/v1/admin/users` avec la secret key) et réutiliser son `id` pour toutes les lignes dépendantes — sans ça, ces insertions échoueraient sur la contrainte de clé étrangère. `auth.users` est la table où Supabase gère les comptes de l'application (e-mail, mot de passe, session) ; si ça se mentionne à l'apprenant, dire simplement qu'un compte factice a été ajouté pour donner un propriétaire réaliste aux données d'exemple — ce n'est pas une vraie personne, rien d'anormal à le voir apparaître dans le projet.
+Si au moins une table référence `auth.users` par clé étrangère, créer d'abord un **compte de démo** via l'API Admin Auth (`POST $SUPABASE_URL/auth/v1/admin/users` avec la secret key) et réutiliser son `id` pour toutes les lignes dépendantes — sans ça, ces insertions échoueraient sur la contrainte de clé étrangère. `auth.users` est la table où Supabase gère les comptes de l'application (e-mail, mot de passe, session).
+
+Ce compte doit être **réellement utilisable pour se connecter** — c'est avec lui que l'apprenant verra ses données d'exemple une fois l'écran de connexion construit par `design-mvp` :
+
+1. Vérifier d'abord que `.env` est bien dans `.gitignore` (et non suivi : `git ls-files .env` ne renvoie rien) — les identifiants vont y être écrits.
+2. Créer le compte avec un e-mail `demo@<slug>.test` (domaine `.test` : réservé, aucun e-mail ne peut y arriver), un mot de passe aléatoire mais lisible (ex. trois mots courts et deux chiffres), et `"email_confirm": true` (le compte est considéré comme déjà confirmé : aucun e-mail n'est envoyé, la connexion marche immédiatement) :
+   ```bash
+   curl -X POST "$SUPABASE_URL/auth/v1/admin/users" \
+     -H "apikey: $SUPABASE_SECRET_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{"email": "demo@<slug>.test", "password": "<mot de passe>", "email_confirm": true}'
+   ```
+3. Écrire `TEST_USER_EMAIL` et `TEST_USER_PASSWORD` dans `.env` — jamais dans `documents/schema-[slug].md` ni dans aucun autre fichier committé.
+4. **Idempotence** : si un compte de démo existe déjà (projet créé avec une version antérieure de cette skill) mais que `.env` n'a pas `TEST_USER_PASSWORD`, ne pas le recréer — lui fixer un mot de passe via `PUT $SUPABASE_URL/auth/v1/admin/users/<id>` (même corps, sans l'e-mail si inchangé) et compléter `.env`.
+
+À dire à l'apprenant en une phrase simple : un compte de démo a été créé pour donner un propriétaire réaliste aux données d'exemple — ce n'est pas une vraie personne ; ses identifiants sont rangés dans `.env`, et ils lui seront rappelés à la fin de `design-mvp` pour qu'il puisse s'y connecter et voir ses données d'exemple.
 
 Lors de l'insertion groupée par l'API REST, tous les objets d'un même envoi doivent avoir exactement les mêmes clés (limite de PostgREST) — insérer ligne par ligne les tables dont les lignes n'ont pas toutes les mêmes champs renseignés.
 
