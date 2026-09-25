@@ -10,7 +10,7 @@ Vérifier qu'une application vibe-codée (frontend + Supabase) ne présente pas 
 ## Entrée
 
 Auditer le repo courant :
-- Le code frontend, à la racine du repo (même emplacement que `prd-proto` — plus de sous-dossier dédié).
+- Le code frontend, à la racine du repo.
 - Tout fichier `.env` présent — jamais son contenu affiché en clair dans le rapport, seulement son existence et sa présence ou non dans `.gitignore`.
 - Les credentials Supabase (`$SUPABASE_URL`, `$SUPABASE_SECRET_KEY`, `$SUPABASE_ACCESS_TOKEN`), pour interroger les RLS réellement actives en base plutôt que deviner depuis les migrations locales — même approche que la skill `prd-bdd`.
 
